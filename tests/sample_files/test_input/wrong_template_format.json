@@ -1,0 +1,39 @@
+{
+    "tasks": [{
+        "name": "AUX TASK 1",
+        "models": 
+             [  {
+                 "model_name": "AUX TASK 1 - MODEL 1",
+                 "file_location": "./tests/sample_files/test_representation/model1_test.tsv",
+                 "control_location": "./tests/sample_files/test_representation/model1_test_control.tsv"
+                 },
+                 {
+                 "model_name": "AUX TASK 1 - MODEL 2",
+                 "file_location": "./tests/sample_files/test_representation/model2_test.tsv",
+                 "control_location": "./tests/sample_files/test_representation/model2_test_control.tsv"
+                 }   
+             ]
+ 
+         },
+     
+     {
+     "task_name": "AUX TASK 2",
+         "models": [{
+                 
+                     "model_name": "AUX TASK 2 - MODEL 1",
+                     "file_location": "./tests/sample_files/test_representation/model3_test.tsv"
+                 },
+                 {
+                 "model_name": "AUX TASK 2 - MODEL 2",
+                 "file_location": "./tests/sample_files/test_representation/model4_test.tsv"
+                 },
+                 {
+                     "model_name": "AUX TASK 2 - MODEL 3",
+                     "file_location": "./tests/sample_files/test_representation/model5_test.tsv"
+         
+                 }
+             ]
+         }
+        
+     ]
+ }
