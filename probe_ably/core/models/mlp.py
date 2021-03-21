@@ -7,17 +7,17 @@ from probe_ably.core.models import AbstractModel
 
 class MLPModel(AbstractModel):
 
-    def __init__(self, representation_size=768, n_classes=3, hidden_size=5, nlayers=1, dropout=0.1):
+    def __init__(self, params:Dict): #representation_size=768, n_classes=3, hidden_size=5, n_layers=1, dropout=0.1
         super().__init__()
-        # Save things to the model here
-        self.representation_size = representation_size
-        self.hidden_size = hidden_size
-        self.nlayers = nlayers
-        self.dropout_p = dropout
+        self.representation_size = params["representation_size"]
+        self.hidden_size = params["hidden_size"]
+        self.n_layers = params["n_layers"]
+        self.dropout_p = params["dropout"]
+        self.n_classes = params["n_classes"]
 
         self.mlp = self.build_mlp()
-        self.linear = nn.Linear(self.final_hidden_size, n_classes)
-        self.dropout = nn.Dropout(dropout)
+        self.linear = nn.Linear(self.final_hidden_size, self.n_classes)
+        self.dropout = nn.Dropout(self.dropout_p)
         self.criterion = nn.CrossEntropyLoss()
 
     def forward(self, representation:Tensor, labels:Tensor, **kwargs) -> Dict[str, Tensor] :
@@ -46,14 +46,14 @@ class MLPModel(AbstractModel):
         return {"nparams":self.get_n_params()}
 
     def build_mlp(self):
-        if self.nlayers == 0:
+        if self.n_layers == 0:
             self.final_hidden_size = self.representation_size
             return nn.Identity()
 
         src_size = self.representation_size
         tgt_size = self.hidden_size
         mlp = []
-        for _ in range(self.nlayers):
+        for _ in range(self.n_layers):
             mlp += [nn.Linear(src_size, tgt_size)]
             mlp += [nn.ReLU()]
             mlp += [nn.Dropout(self.dropout_p)]
