@@ -13,24 +13,19 @@
 
 // * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal.
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter } from "react-router-dom";
-
+// vendor styles
+import "@fortawesome/fontawesome-free/css/all.css";
+import React from "react";
+import "react-datetime/css/react-datetime.css";
+import ReactDOM from "react-dom";
+import HomePage from "./pages/HomePage";
 // core styles
 import "./scss/volt.scss";
 
-// vendor styles
-import "@fortawesome/fontawesome-free/css/all.css";
-import "react-datetime/css/react-datetime.css";
-
-import HomePage from "./pages/HomePage";
-import ScrollToTop from "./components/ScrollToTop";
-
 ReactDOM.render(
-  <HashRouter>
-    <ScrollToTop />
+  <div>
+    {/* <ScrollToTop /> */}
     <HomePage />
-  </HashRouter>,
-  document.getElementById("root")
+  </div>,
+  document.getElementById("root"),
 );
