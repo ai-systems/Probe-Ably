@@ -7,10 +7,15 @@ from probe_ably.core.models import AbstractModel
 
 class LinearModel(AbstractModel):
 
-    def __init__(self, representation_size=768, n_classes=3, dropout=0.1):
+    def __init__(self, params:Dict): #representation_size=768, n_classes=3, dropout=0.1, alpha=0.0
         super().__init__()
-        self.linear = nn.Linear(representation_size, n_classes)
-        self.dropout = nn.Dropout(dropout)
+        self.representation_size = params["representation_size"]
+        self.dropout_p = params["dropout"]
+        self.n_classes = params["n_classes"]
+        self.alpha = params["alpha"]
+
+        self.linear = nn.Linear(self.representation_size,  self.n_classes)
+        self.dropout = nn.Dropout(self.dropout_p)
         self.criterion = nn.CrossEntropyLoss()
 
     def forward(self, representation:Tensor, labels:Tensor, **kwargs) -> Dict[str, Tensor] :
@@ -26,7 +31,7 @@ class LinearModel(AbstractModel):
         embeddings = self.dropout(representation)
         logits = self.linear(embeddings)
         preds = logits.max(1).indices
-        loss = self.criterion(logits, labels)
+        loss = self.criterion(logits, labels) + self.alpha * self.get_norm()
         return {'loss': loss, 'preds': preds}
 
     def get_complexity(self, **kwargs)-> Dict[str,float]:
