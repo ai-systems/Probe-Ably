@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 from probe_ably.core.tasks.control_task import GenerateControlTask
 
-
+# TODO add this to a config file
 SCHEMA_TEMPLATE = {
     "type": "object",
     "properties": {

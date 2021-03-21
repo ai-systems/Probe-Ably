@@ -10,7 +10,15 @@ class PrepareRicoScaTest(unittest.TestCase):
         )
         read_input_task = ReadInputTask()
 
-        read_input_task.run(TEST_INPUT)
+        output = read_input_task.run(TEST_INPUT)
+
+        self.assertEquals(len(output[0]["models"][0]["model_labels"]), 10)
+
+    def test_wrong_control_size(self):
+        TEST_INPUT = "./tests/sample_files/test_input/wrong_control_size.json"
+        read_input_task = ReadInputTask()
+
+        self.assertRaises(SystemExit, read_input_task.run, TEST_INPUT)
 
     def test_missing_key(self):
 

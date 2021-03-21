@@ -3,7 +3,7 @@ import numpy as np
 
 REPRESENTATION_DIM = 20
 NUM_ROWS = 10
-OUTPUT_FILE_NAME = "model2_test_control.tsv"
+OUTPUT_FILE_NAME = "model3_test_control.tsv"
 LABELS_ONLY = True
 
 if LABELS_ONLY:
