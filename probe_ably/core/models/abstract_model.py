@@ -21,11 +21,11 @@ class AbstractModel(Module,ABC):
         ...
 
     @abstractmethod
-    def get_complexity(self, **kwargs)-> float:
+    def get_complexity(self, **kwargs)-> Dict[str,float]:
         """Computes the complexity
 
         Returns:
-            float: Returns the complexity value
+            Dict[str,float]: Returns dictionary of {"complexity_measure1": value1, "complexity_measure2": value2}
         """
         ...
 
