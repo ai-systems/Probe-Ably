@@ -3,5 +3,3 @@ from prefect import Task
 
 
 class GenerateRandomTask(Task):
-    def run(self):
-        ...
