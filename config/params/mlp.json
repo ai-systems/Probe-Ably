@@ -1,0 +1,20 @@
+{
+	  "probing_class": "probe_ably.core.models.mlp.MLPModel",
+	    "params": [
+		        {
+				      "name": "hidden_size",
+				            "type": "range",
+					          "bounds": [32, 1016]
+						      },
+						          {
+								        "name": "nlayers",
+									      "type": "range",
+									            "bounds": [1, 5]
+										        },
+											    {
+												          "name": "dropout",
+													        "type": "range",
+														      "bounds": [0.0, 1.0]
+														          }
+															    ]
+}

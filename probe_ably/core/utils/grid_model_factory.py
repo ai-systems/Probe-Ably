@@ -3,18 +3,35 @@ from typing import Any, Dict, List
 from probe_ably.core.models import AbstractModel
 import importlib
 import random
+import os
+import glob
+import json
 
 class GridModelFactory:
-
     @staticmethod
-    def create_models(model_class: str, params: List[Dict], num_models: int = 50)-> List[AbstractModel]:
+    def create_models(model_class: str, num_models: int = 50, param_args:Dict = {})-> List[AbstractModel]:
+
+        paths = glob.glob("./config/params/*.json")
+        print(paths)
+
+        params = None 
+        for path in paths:
+            with open(path, 'r') as f:
+                maybe_params = json.load(f)
+                print(model_class)
+                print(maybe_params)
+                if model_class in maybe_params:
+                    params = maybe_params[model_class]['params']
+                    break
+        if not params:
+            raise FileNotFoundError('No parameters specified, dear.')
 
         ModelClass = AbstractModel.subclasses[model_class]
 
         models = []
         for i in range(num_models):
             chosen_params = choose_params(params)
-            model = ModelClass(chosen_params)
+            model = ModelClass({**chosen_params, **param_args})
             models.append(model)
 
         return models

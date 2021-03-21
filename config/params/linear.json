@@ -1,0 +1,15 @@
+{
+	  "probe_ably.core.models.linear.LinearModel": { 
+	    "params": [
+		        {
+				"name": "dropout",
+				"type": "range",
+				"bounds": [0.0, 1.0]
+		      },
+		        {
+				"name": "alpha",
+				"type": "range",
+				"bounds": [0.0, 1.0]
+		      }]
+	}
+}
