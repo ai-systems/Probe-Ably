@@ -97,3 +97,5 @@ def serve_data():
         },
       ],
     }
+
+app.run(port=8031,host='0.0.0.0')

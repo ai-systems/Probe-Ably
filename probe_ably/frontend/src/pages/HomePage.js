@@ -11,10 +11,10 @@ export default () => {
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    fetch("/time")
+    fetch("http://127.0.0.1:3000/")
       .then((res) => res.json())
       .then((data) => {
-        setCurrentTime(data.time);
+        console.log(data);
       });
   }, []);
 
