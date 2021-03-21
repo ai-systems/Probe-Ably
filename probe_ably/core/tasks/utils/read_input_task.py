@@ -7,6 +7,9 @@ import json
 import sys
 import jsonschema
 import os.path
+import pandas as pd
+import numpy as np
+from probe_ably.core.tasks.control_task import GenerateControlTask
 
 
 SCHEMA_TEMPLATE = {
@@ -48,6 +51,12 @@ class ModelRepresentationFileNotFound(Exception):
         self.model_location = model_location
 
 
+class ControlSizeMissmatch(Exception):
+    def __init__(self, task_name, model_name):
+        self.task_name = task_name
+        self.model_name = model_name
+
+
 class ReadInputTask(Task):
     @overrides
     def run(self, input_file_location: str) -> Dict:
@@ -58,20 +67,19 @@ class ReadInputTask(Task):
 
         Returns: Dict:
             Dict:
-                {'tasks':
-                    { task_id: int : {'task_name': str,
-                                        'models':
-                                                {model_id:
-                                                        {'model_name': str,
-                                                         'file_location': str,
-                                                         'control_type: 0 [Random], 1 [Special], 2 [User Gen]
-                                                         'control_location': str [If user generated] or None
-                                                }
+            { task_id:  {'task_name': str,
+                            'models':
+                                    {model_id:
+                                            {"model_name": str,
+                                            "model_vectors": numpy.ndarray
+                                            "model_labels": numpy.ndarray
+                                            "control_labels": numpy.ndarray
+                                             }
                                     }
                     }
-                }
         """
 
+        generate_control_task = GenerateControlTask()
         logger.debug("Reading input file.")
         try:
             with open(input_file_location, "r") as f:
@@ -95,26 +103,51 @@ class ReadInputTask(Task):
                         raise ModelRepresentationFileNotFound(
                             model_content["file_location"]
                         )
+                    else:
+                        model_representation = pd.read_csv(
+                            model_content["file_location"], sep="\t", header=None
+                        )
+                        model_labels = model_representation.iloc[:, -1].to_numpy()
 
-                    control_type = 0
-                    control_location = None
+                        model_representation.drop(
+                            model_representation.columns[-1], axis=1, inplace=True
+                        )
+                        model_representation = model_representation.to_numpy()
+
                     if "control_location" in model_content:
                         if not os.path.isfile(model_content["control_location"]):
                             raise ModelRepresentationFileNotFound(
-                                model_content["file_location"]
+                                model_content["control_location"]
                             )
-                        control_location = model_content["control_location"]
-                        control_type = 2
+                        else:
+                            control_labels = np.loadtxt(
+                                fname=model_content["control_location"],
+                                delimiter="\t",
+                                dtype=int,
+                            )
 
-                    if "control_type" in model_content and control_location == None:
-                        if model_content["control_type"] == "special":
-                            control_type = 1
+                            if len(control_labels) != len(model_labels):
+                                raise ControlSizeMissmatch(
+                                    output_dict[current_task_id]["task_name"],
+                                    model_content["model_name"],
+                                )
+                    else:
+                        if "control_type" in model_content:
+                            control_labels = generate_control_task.run(
+                                model_representation,
+                                model_labels,
+                                model_content["control_type"],
+                            )
+                        else:
+                            control_labels = generate_control_task.run(
+                                model_representation, model_labels
+                            )
 
                     output_dict[current_task_id]["models"][current_model_id] = {
                         "model_name": model_content["model_name"],
-                        "file_location": model_content["file_location"],
-                        "control_type": control_type,
-                        "control_location": control_location,
+                        "model_vectors": model_representation,
+                        "model_labels": model_labels,
+                        "control_labels": control_labels,
                     }
 
                     current_model_id += 1
@@ -133,3 +166,10 @@ class ReadInputTask(Task):
             )
         except ModelRepresentationFileNotFound as e:
             sys.exit(f"Representation file ({e.model_location}) not found.")
+
+        except ControlSizeMissmatch as e:
+            sys.exit(
+                f"Control task for task {e.task_name} and model {e.model_name} does not match the number of labels of the aux task."
+            )
+
+        return output_dict

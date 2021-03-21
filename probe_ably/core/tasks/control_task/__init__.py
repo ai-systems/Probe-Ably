@@ -1,1 +1,1 @@
-from .generate_random_task import GenerateRandomTask
+from .generate_control_task import GenerateControlTask
