@@ -49,7 +49,6 @@ class MLPModel(AbstractModel):
         if self.n_layers == 0:
             self.final_hidden_size = self.representation_size
             return nn.Identity()
-
         src_size = self.representation_size
         tgt_size = self.hidden_size
         mlp = []
