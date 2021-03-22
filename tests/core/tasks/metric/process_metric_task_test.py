@@ -276,7 +276,13 @@ class ProcessMetricTaskTest(unittest.TestCase):
 
         process_metric_task = ProcessMetricTask()
 
-        processed_data = process_metric_task.run(metric_results, None)
+        processed_data = process_metric_task.run(
+            metric_results,
+            {
+                "intra_metric": "probe_ably.core.metrics.accuracy.AccuracyMetric",
+                "inter_metric": "probe_ably.core.metrics.selectivity.SelectivityMetric",
+            },
+        )
         self.assertEqual(len(processed_data), 2)
         self.assertEqual(processed_data[0]["name"], "AUX TASK 1")
         self.assertEqual(processed_data[1]["name"], "AUX TASK 2")

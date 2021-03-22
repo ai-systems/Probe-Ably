@@ -1,16 +1,14 @@
+import random
 from collections import defaultdict
 from typing import Dict
 
+import numpy as np
 from loguru import logger
 from overrides import overrides
 from prefect import Task
 from probe_ably.core.metrics.abstract_inter_model_metric import AbstractInterModelMetric
 from probe_ably.core.metrics.abstract_intra_model_metric import AbstractIntraModelMetric
 from tqdm import tqdm
-
-
-def dummy_metric(**kwargs):
-    return 0.8
 
 
 class ProcessMetricTask(Task):
@@ -121,13 +119,21 @@ class ProcessMetricTask(Task):
                             ):
                                 m_data = {
                                     "id": model_name,
-                                    "color": "hsl(190, 70%, 50%)",
+                                    "color": f"hsl(190, {int(random.randint(1,9))*10}%, {int(random.randint(1,9))*10}%)",
                                 }
                                 m_data["data"] = []
+                                x, y = [], []
                                 for point in processed_task["probings"][
                                     (probing_model, model_name, x_axis, y_axis)
                                 ]:
-                                    m_data["data"].append(point)
+                                    x.append(point["x"])
+                                    y.append(point["y"])
+                                    # m_data["data"].append(point)
+                                for index in np.argsort(x):
+                                    m_data["data"].append(
+                                        {"x": x[index], "y": y[index]}
+                                    )
+
                                 if "chart_data" not in model_data:
                                     model_data["x_axis"] = x_axis
                                     model_data["y_axis"] = y_axis
