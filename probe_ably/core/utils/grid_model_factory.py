@@ -7,24 +7,25 @@ import os
 import glob
 import json
 
+
 class GridModelFactory:
     @staticmethod
-    def create_models(model_class: str, num_models: int = 50, param_args:Dict = {})-> List[AbstractModel]:
+    def create_models(
+        model_class: str, num_models: int = 50, param_args: Dict = {}
+    ) -> List[AbstractModel]:
 
         paths = glob.glob("./config/params/*.json")
         print(paths)
 
-        params = None 
+        params = None
         for path in paths:
-            with open(path, 'r') as f:
+            with open(path, "r") as f:
                 maybe_params = json.load(f)
-                print(model_class)
-                print(maybe_params)
                 if model_class in maybe_params:
-                    params = maybe_params[model_class]['params']
+                    params = maybe_params[model_class]["params"]
                     break
         if not params:
-            raise FileNotFoundError('No parameters specified, dear.')
+            raise FileNotFoundError("No parameters specified, dear.")
 
         ModelClass = AbstractModel.subclasses[model_class]
 
@@ -38,12 +39,21 @@ class GridModelFactory:
 
 
 def choose_params(params: List[Dict]):
-    names = [param['name'] for param in params]
-    values = [random.uniform(*param['bounds']) for param in params]
+    names = [param["name"] for param in params]
+    values = list()
+    for param in params:
+        start, end = (param["bounds"][0], param["bounds"][1])
+        if type(start) == int:
+            values.append(random.randint(start, end))
+        else:
+            values.append(random.uniform(start, end))
     return dict(zip(names, values))
-    
 
-if __name__=='__main__':
-    params = [{'name':'dog', 'bounds':[0.1, 20.3]},{'name':'cat', 'bounds':[0.2, 0.5]}]
+
+if __name__ == "__main__":
+    params = [
+        {"name": "dog", "bounds": [0.1, 20.3]},
+        {"name": "cat", "bounds": [0.2, 0.5]},
+    ]
 
     choose_params(params)

@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from typing import Dict
 import torch
 from torch.utils.data import Dataset
+import numpy as np
 
 
 class PrepareDataFromProbingTask(Task):
@@ -50,6 +51,8 @@ class PrepareDataFromProbingTask(Task):
                                     "model_vectors": numpy.ndarray
                                     "model_labels": numpy.ndarray
                                     "control_labels": numpy.ndarray
+                                    "representation_size": int
+                                    "number_of_classes": int
                                      }
                             }
             }
@@ -58,10 +61,10 @@ class PrepareDataFromProbingTask(Task):
             Dict: output_data
             {task_id: {"task_name": str,
                         "models": {model_id: {
-                                                "model_name": str,
-                                                "model": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
-                                                "control": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
-                                            }
+                                    "model_name": str,
+                                    "model": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
+                                    "control": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
+                                    }
                                 }
                         }
                 }
@@ -76,6 +79,14 @@ class PrepareDataFromProbingTask(Task):
             output_data[id_task]["models"] = dict()
             for model_id, model_content in task_content["models"].items():
                 output_data[id_task]["models"][model_id] = dict()
+                output_data[id_task]["models"][model_id][
+                    "representation_size"
+                ] = model_content["representation_size"]
+
+                output_data[id_task]["models"][model_id][
+                    "number_of_classes"
+                ] = model_content["number_of_classes"]
+
                 output_data[id_task]["models"][model_id]["model_name"] = model_content[
                     "model_name"
                 ]
@@ -127,13 +138,15 @@ class PrepareDataFromProbingTask(Task):
 
 class TorchDataset(Dataset):
     def __init__(self, dataset):
+
         self.dataset = list(dataset.values())
+        self.labels = np.array([data["label"] for data in self.dataset])
         self.keys = list(dataset.keys())
 
     def __getitem__(self, index):
         instance = self.dataset[index]
         return (
-            torch.LongTensor(instance["representation"]),
+            torch.FloatTensor(instance["representation"]),
             instance["label"],
             index,
         )

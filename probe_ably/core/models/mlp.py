@@ -2,12 +2,13 @@ from typing import Dict
 import numpy as np
 import torch
 from torch import Tensor, nn
-from probe_ably.core.models import AbstractModel 
+from probe_ably.core.models import AbstractModel
 
 
 class MLPModel(AbstractModel):
-
-    def __init__(self, params:Dict): #representation_size=768, n_classes=3, hidden_size=5, n_layers=1, dropout=0.1
+    def __init__(
+        self, params: Dict
+    ):  # representation_size=768, n_classes=3, hidden_size=5, n_layers=1, dropout=0.1
         super().__init__()
         self.representation_size = params["representation_size"]
         self.hidden_size = params["hidden_size"]
@@ -20,7 +21,9 @@ class MLPModel(AbstractModel):
         self.dropout = nn.Dropout(self.dropout_p)
         self.criterion = nn.CrossEntropyLoss()
 
-    def forward(self, representation:Tensor, labels:Tensor, **kwargs) -> Dict[str, Tensor] :
+    def forward(
+        self, representation: Tensor, labels: Tensor, **kwargs
+    ) -> Dict[str, Tensor]:
         """forward method
 
         Args:
@@ -29,21 +32,21 @@ class MLPModel(AbstractModel):
 
         Returns:
             Dict[str, Tensor]: Return dictionary of {'loss': loss, 'preds': preds }
-        """        
+        """
         embeddings = self.dropout(representation)
         mlp_out = self.mlp(embeddings)
         logits = self.linear(mlp_out)
         preds = logits.max(1).indices
         loss = self.criterion(logits, labels)
-        return {'loss': loss, 'preds': preds}
+        return {"loss": loss, "preds": preds}
 
-    def get_complexity(self, **kwargs)-> Dict[str,float]:
+    def get_complexity(self, **kwargs) -> Dict[str, float]:
         """Computes the complexity
 
         Returns:
             float: Returns the complexity value
         """
-        return {"nparams":self.get_n_params()}
+        return {"nparams": self.get_n_params()}
 
     def build_mlp(self):
         if self.n_layers == 0:
@@ -61,11 +64,11 @@ class MLPModel(AbstractModel):
         return nn.Sequential(*mlp)
 
     def get_n_params(self):
-        pp=0
-        print(list(self.parameters()))
+        pp = 0
+
         for p in list(self.parameters()):
-            nn=1
+            nn = 1
             for s in list(p.size()):
-                nn = nn*s
+                nn = nn * s
             pp += nn
         return pp
