@@ -69,7 +69,12 @@ class ProcessMetricTask(Task):
                                         cplx_key,
                                         inter_eval_name,
                                     )
-                                ].append({"x": inter_score, "y": cplx_data})
+                                ].append(
+                                    {
+                                        "y": round(inter_score, 2),
+                                        "x": round(cplx_data, 2),
+                                    }
+                                )
 
                                 probing_models.add(probing_model)
                                 models.add(model_name)
@@ -84,7 +89,12 @@ class ProcessMetricTask(Task):
                                         cplx_key,
                                         intra_eval_name,
                                     )
-                                ].append({"x": intra_score, "y": cplx_data})
+                                ].append(
+                                    {
+                                        "y": round(intra_score, 2),
+                                        "x": round(cplx_data, 2),
+                                    }
+                                )
             processed_aux_tasks.append(processed_task)
 
         visual_data_tasks = []
