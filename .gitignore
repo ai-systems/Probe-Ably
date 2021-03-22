@@ -189,3 +189,6 @@ samples/
 *.zip
 .noseids
 blub
+data/*
+data.json
+bp_config.json

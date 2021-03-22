@@ -7,8 +7,11 @@ import json
 import sys
 import jsonschema
 import os.path
+import pandas as pd
+import numpy as np
+from probe_ably.core.tasks.control_task import GenerateControlTask
 
-
+# TODO add this to a config file
 SCHEMA_TEMPLATE = {
     "type": "object",
     "properties": {
@@ -48,6 +51,12 @@ class ModelRepresentationFileNotFound(Exception):
         self.model_location = model_location
 
 
+class ControlSizeMissmatch(Exception):
+    def __init__(self, task_name, model_name):
+        self.task_name = task_name
+        self.model_name = model_name
+
+
 class ReadInputTask(Task):
     @overrides
     def run(self, input_file_location: str) -> Dict:
@@ -58,20 +67,21 @@ class ReadInputTask(Task):
 
         Returns: Dict:
             Dict:
-                {'tasks':
-                    { task_id: int : {'task_name': str,
-                                        'models':
-                                                {model_id:
-                                                        {'model_name': str,
-                                                         'file_location': str,
-                                                         'control_type: 0 [Random], 1 [Special], 2 [User Gen]
-                                                         'control_location': str [If user generated] or None
-                                                }
+            { task_id:  {'task_name': str,
+                            'models':
+                                    {model_id:
+                                            {"model_name": str,
+                                            "model_vectors": numpy.ndarray
+                                            "model_labels": numpy.ndarray
+                                            "control_labels": numpy.ndarray
+                                            "representation_size": int,
+                                            "number_of_classes": int,
+                                             }
                                     }
                     }
-                }
         """
 
+        generate_control_task = GenerateControlTask()
         logger.debug("Reading input file.")
         try:
             with open(input_file_location, "r") as f:
@@ -83,6 +93,8 @@ class ReadInputTask(Task):
             output_dict = dict()
             current_task_id = 0
             task_list = input_data["tasks"]
+
+            ## Getting input info
             for task_content in task_list:
                 output_dict[current_task_id] = dict()
                 output_dict[current_task_id]["task_name"] = task_content["task_name"]
@@ -96,29 +108,72 @@ class ReadInputTask(Task):
                             model_content["file_location"]
                         )
 
-                    control_type = 0
-                    control_location = None
+                    model_representation = pd.read_csv(
+                        model_content["file_location"], sep="\t", header=None
+                    )
+                    model_labels = model_representation.iloc[:, -1].to_numpy()
+
+                    model_representation.drop(
+                        model_representation.columns[-1], axis=1, inplace=True
+                    )
+                    model_representation = model_representation.to_numpy()
+
                     if "control_location" in model_content:
+                        default_control = False
                         if not os.path.isfile(model_content["control_location"]):
                             raise ModelRepresentationFileNotFound(
-                                model_content["file_location"]
+                                model_content["control_location"]
                             )
-                        control_location = model_content["control_location"]
-                        control_type = 2
 
-                    if "control_type" in model_content and control_location == None:
-                        if model_content["control_type"] == "special":
-                            control_type = 1
+                        control_labels = np.loadtxt(
+                            fname=model_content["control_location"],
+                            delimiter="\t",
+                            dtype=int,
+                        )
+
+                        if len(control_labels) != len(model_labels):
+                            raise ControlSizeMissmatch(
+                                output_dict[current_task_id]["task_name"],
+                                model_content["model_name"],
+                            )
+                    else:
+                        default_control = True
+                        if "control_type" in model_content:
+                            control_labels = generate_control_task.run(
+                                model_representation,
+                                model_labels,
+                                model_content["control_type"],
+                            )
+                        else:
+                            control_labels = generate_control_task.run(
+                                model_representation, model_labels
+                            )
 
                     output_dict[current_task_id]["models"][current_model_id] = {
                         "model_name": model_content["model_name"],
-                        "file_location": model_content["file_location"],
-                        "control_type": control_type,
-                        "control_location": control_location,
+                        "model_vectors": model_representation,
+                        "model_labels": model_labels,
+                        "control_labels": control_labels,
+                        "representation_size": model_representation.shape[1],
+                        "number_of_classes": len(np.unique(model_labels)),
+                        "default_control": default_control,
                     }
 
                     current_model_id += 1
                 current_task_id += 1
+
+            ## Getting probe info
+
+            probing_setup = {
+                "inter_metric": input_data["probing_setup"]["inter_metric"],
+                "intra_metric": input_data["probing_setup"]["intra_metric"],
+                "probing_models": dict(),
+            }
+            num_probing_models = 0
+
+            for probe_model in input_data["probing_setup"]["probing_models"]:
+                probing_setup["probing_models"][num_probing_models] = probe_model
+                num_probing_models += 1
 
         except FileNotFoundError:
             sys.exit(f"Input file not found: {input_file_location}")
@@ -133,3 +188,10 @@ class ReadInputTask(Task):
             )
         except ModelRepresentationFileNotFound as e:
             sys.exit(f"Representation file ({e.model_location}) not found.")
+
+        except ControlSizeMissmatch as e:
+            sys.exit(
+                f"Control task for task {e.task_name} and model {e.model_name} does not match the number of labels of the aux task."
+            )
+
+        return {"tasks": output_dict, "probing_setup": probing_setup}

@@ -1,0 +1,21 @@
+{
+	  "probe_ably.core.models.mlp.MLPModel": {
+	    "params": [
+						          {
+								        "name": "hidden_size",
+									      "type": "int_range",
+									            "options": [32, 1024]
+										        },
+						          {
+								        "name": "n_layers",
+									      "type": "int_range",
+									            "options": [1, 10]
+										        },
+											    {
+												          "name": "dropout",
+													        "type": "float_range",
+														"options": [0.0, 0.5]
+														          }
+															    ]
+	}
+}
