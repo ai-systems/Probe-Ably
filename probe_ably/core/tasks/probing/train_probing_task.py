@@ -40,7 +40,7 @@ class TrainProbingTask(Task):
         eval_fn,
     ):
         outputs = {}
-        logger.info("Running train mode")
+        # logger.info("Running train mode")
         train_dataloader = DataLoader(
             train,
             batch_size=train_batch_size,
@@ -112,11 +112,13 @@ class TrainProbingTask(Task):
         ]
         intra_metric_object = intra_metric_class()
 
-        for id_task, content_tasks in tqdm(tasks.items()):
+        for id_task, content_tasks in tqdm(tasks.items(), desc="Task"):
             output_results[id_task] = dict()
             output_results[id_task]["models"] = dict()
             output_results[id_task]["task_name"] = content_tasks["task_name"]
-            for id_model, model_content in content_tasks["models"].items():
+            for id_model, model_content in tqdm(
+                content_tasks["models"].items(), desc="Model"
+            ):
                 output_results[id_task]["models"][id_model] = dict()
                 output_results[id_task]["models"][id_model][
                     "model_name"
@@ -143,7 +145,10 @@ class TrainProbingTask(Task):
                     ] = dict()
                     run_number = 0
                     train_batch_size = probe_content["batch_size"] * max(1, n_gpu)
-                    for probe in probing_models:
+                    # logger.info(
+                    #     f"Running {probe_model_name} for {output_results[id_task]['task_name']}, model:  {model_content['model_name']}"
+                    # )
+                    for probe in tqdm(probing_models, desc="Probing model"):
                         probe_for_model = deepcopy(probe)
                         probe_for_control = deepcopy(probe)
                         preds_model = self.start_training_process(
@@ -208,15 +213,14 @@ class TrainProbingTask(Task):
 
         tr_loss, logging_loss = 0.0, 0.0
         model.zero_grad()
-        train_iterator = trange(
+        train_iterator = range(
             epochs_trained,
             int(num_epochs),
-            desc="Epoch",
         )
 
         for epoch in train_iterator:
-            epoch_iterator = tqdm(train_dataloader, desc="Iteration")
-            for step, batch in enumerate(epoch_iterator):
+            # epoch_iterator = tqdm(train_dataloader, desc="Iteration")
+            for step, batch in enumerate(train_dataloader):
                 model.train()
                 batch = tuple(t.to(device) for t in batch)
 
@@ -245,7 +249,7 @@ class TrainProbingTask(Task):
                 if self.logging_steps > 0 and global_step % self.logging_steps == 0:
                     loss_scalar = (tr_loss - logging_loss) / self.logging_steps
 
-                    epoch_iterator.set_description(f"Loss :{loss_scalar}")
+                    # epoch_iterator.set_description(f"Loss :{loss_scalar}")
 
                     logging_loss = tr_loss
 
@@ -259,7 +263,7 @@ class TrainProbingTask(Task):
 
             with torch.no_grad():
                 if score > best_score:
-                    logger.success(f"Saving new model with best score: {score}")
+                    # logger.success(f"Saving new model with best score: {score}")
                     best_model = model
                     best_score = score
 
@@ -272,7 +276,7 @@ class TrainProbingTask(Task):
         nb_eval_steps = 0
         preds = None
 
-        for batch in tqdm(dataloader, desc="Evaluating"):
+        for batch in dataloader:
             model.eval()
             batch = tuple(t.to(device) for t in batch)
 
@@ -299,6 +303,6 @@ class TrainProbingTask(Task):
         eval_loss = eval_loss / nb_eval_steps
 
         score = eval_fn(preds, out_label_ids)
-        logger.info(f"Score:{score}")
+        # logger.info(f"Score:{score}")
 
         return score, preds
