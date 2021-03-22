@@ -6,12 +6,24 @@ import torch
 from torch.utils.data import DataLoader
 import random
 import numpy as np
+from probe_ably.core.utils import GridModelFactory
+from probe_ably.core.models import LinearModel
+from tqdm import tqdm, trange
+from sklearn.metrics import accuracy_score
+from probe_ably.core.metrics import AbstractIntraModelMetric
 
 
 class TrainProbingTask(Task):
     def __init__(self, **kwargs):
-        self.per_gpu_batch_size = kwargs.get("per_gpu_batch_size", 16)
+        self.per_gpu_batch_size = kwargs.get("per_gpu_batch_size", 2)
         self.cuda = kwargs.pop("cuda", True)
+        self.num_train_epochs = kwargs.get("num_train_epochs", 5)
+        self.logging_steps = kwargs.get("logging_steps", 5)
+        self.probing_model_names = [
+            "probe_ably.core.models.linear.LinearModel",
+            "probe_ably.core.models.mlp.MLPModel",
+        ]
+        self.number_of_probing_models = 2
         super(TrainProbingTask, self).__init__(**kwargs)
 
     def set_seed(self, n_gpu, seed=42):
@@ -23,9 +35,9 @@ class TrainProbingTask(Task):
 
     def start_training_process(
         self,
-        train_loader,
-        test_loader,
-        dev_loader,
+        train_dataloader,
+        test_dataloader,
+        dev_dataloader,
         train_batch_size,
         model,
         device,
@@ -41,26 +53,23 @@ class TrainProbingTask(Task):
             model,
             train_dataloader,
             dev_dataloader,
-            dev_dataset,
             device,
             n_gpu,
             eval_fn,
         )
 
-        score = self.eval(
+        score_test, preds_test = self.eval(
             best_model,
-            test_data_loader,
-            test_dataset,
+            test_dataloader,
             device,
             n_gpu,
             eval_fn,
-            mode="test",
         )
 
-        return outputs
+        return preds_test
 
     @overrides
-    def run(self, tasks: Dict, experiments: Dict):
+    def run(self, tasks: Dict, experiments: Dict, probing_setup: Dict):
         """[summary]
 
         Args:
@@ -75,6 +84,7 @@ class TrainProbingTask(Task):
                 }
             experiments ([type]): [description]
         """
+
         logger.debug("Starting the Probing Training Task")
         torch.cuda.empty_cache()
         device = torch.device(
@@ -88,8 +98,25 @@ class TrainProbingTask(Task):
         train_batch_size = self.per_gpu_batch_size * max(1, n_gpu)
 
         n_gpu = torch.cuda.device_count()
+        output_results = dict()
+        intra_metric_class = AbstractIntraModelMetric.subclasses[
+            probing_setup["intra_metric"]
+        ]
+        intra_metric_object = intra_metric_class()
         for id_task, content_tasks in tasks.items():
+            output_results[id_task] = dict()
+            output_results[id_task]["models"] = dict()
+            output_results[id_task]["task_name"] = content_tasks["task_name"]
             for id_model, model_content in content_tasks["models"].items():
+                output_results[id_task]["models"][id_model] = dict()
+                output_results[id_task]["models"][id_model][
+                    "model_name"
+                ] = model_content["model_name"]
+                model_params = {
+                    "representation_size": model_content["representation_size"],
+                    "n_classes": model_content["number_of_classes"],
+                }
+
                 model_train_dataloader = DataLoader(
                     model_content["model"]["train"],
                     batch_size=train_batch_size,
@@ -100,7 +127,7 @@ class TrainProbingTask(Task):
                     batch_size=train_batch_size,
                     shuffle=False,
                 )
-                model_test_data_loader = DataLoader(
+                model_test_dataloader = DataLoader(
                     model_content["model"]["test"],
                     batch_size=train_batch_size,
                     shuffle=False,
@@ -116,36 +143,71 @@ class TrainProbingTask(Task):
                     batch_size=train_batch_size,
                     shuffle=False,
                 )
-                control_test_data_loader = DataLoader(
+                control_test_dataloader = DataLoader(
                     model_content["control"]["test"],
                     batch_size=train_batch_size,
                     shuffle=False,
                 )
 
-                print(model_content)
+                for name in self.probing_model_names:
+                    probing_models = GridModelFactory.create_models(
+                        name, self.number_of_probing_models, model_params
+                    )
+                    output_results[id_task]["models"][id_model][name] = dict()
+                    run_number = 0
+                    for probe in probing_models:
+                        preds_model = self.start_training_process(
+                            model_train_dataloader,
+                            model_test_dataloader,
+                            model_dev_dataloader,
+                            train_batch_size,
+                            probe,
+                            device,
+                            n_gpu,
+                            eval_fn=intra_metric_object.calculate_metrics,
+                        )
+
+                        preds_control = self.start_training_process(
+                            control_train_dataloader,
+                            control_test_dataloader,
+                            control_dev_dataloader,
+                            train_batch_size,
+                            probe,
+                            device,
+                            n_gpu,
+                            eval_fn=accuracy_score,
+                        )
+                        output_results[id_task]["models"][id_model][name][
+                            run_number
+                        ] = {
+                            "complexity": probe.get_complexity(),
+                            "model": {
+                                "labels": model_content["model"]["test"].labels,
+                                "preds": preds_model,
+                            },
+                            "control": {
+                                "labels": model_content["control"]["test"].labels,
+                                "preds": preds_control,
+                            },
+                        }
+                        run_number += 1
+        return output_results
 
     def train(
         self,
         model,
-        criterion,
         train_dataloader,
         dev_dataloader,
-        dev_dataset,
         device,
         n_gpu,
         eval_fn,
-        output_dir,
-        save_optimizer,
-        eval_params,
     ):
-        results = {}
-        best_score = 0.0
+        best_score = -1.0
 
-        optimizer = optim.Adam(model.parameters())
+        optimizer = torch.optim.Adam(model.parameters())
 
         global_step = 0
         epochs_trained = 0
-        steps_trained_in_current_epoch = 0
 
         tr_loss, logging_loss = 0.0, 0.0
         model.zero_grad()
@@ -157,7 +219,6 @@ class TrainProbingTask(Task):
 
         for epoch in train_iterator:
             epoch_iterator = tqdm(train_dataloader, desc="Iteration")
-            epoch_loss = 0
             for step, batch in enumerate(epoch_iterator):
                 model.train()
                 batch = tuple(t.to(device) for t in batch)
@@ -171,48 +232,33 @@ class TrainProbingTask(Task):
 
                 loss = output["loss"]
 
-                epoch_loss += loss.item()
-
                 if n_gpu > 1:
                     loss = (
                         loss.mean()
                     )  # mean() to average on multi-gpu parallel training
-                if self.gradient_accumulation_steps > 1:
-                    loss = loss / self.gradient_accumulation_steps
 
                 loss.backward()
 
                 tr_loss += loss.item()
-                if (step + 1) % self.gradient_accumulation_steps == 0:
-                    torch.nn.utils.clip_grad_norm_(
-                        model.parameters(), self.max_grad_norm
-                    )
 
-                    optimizer.step()
-                    model.zero_grad()
-                    global_step += 1
+                optimizer.step()
+                model.zero_grad()
+                global_step += 1
 
-                    if self.logging_steps > 0 and global_step % self.logging_steps == 0:
-                        loss_scalar = (tr_loss - logging_loss) / self.logging_steps
+                if self.logging_steps > 0 and global_step % self.logging_steps == 0:
+                    loss_scalar = (tr_loss - logging_loss) / self.logging_steps
 
-                        epoch_iterator.set_description(
-                            f"Loss :{loss_scalar} LR: {learning_rate_scalar}"
-                        )
+                    epoch_iterator.set_description(f"Loss :{loss_scalar}")
 
-                        logging_loss = tr_loss
+                    logging_loss = tr_loss
 
-            score = self.eval(
-                criterion,
+            score, _ = self.eval(
                 model,
                 dev_dataloader,
-                dev_dataset,
                 device,
                 n_gpu,
                 eval_fn,
-                eval_params,
-                mode="dev",
             )
-            results[epoch] = score
 
             with torch.no_grad():
                 if score > best_score:
@@ -220,20 +266,9 @@ class TrainProbingTask(Task):
                     best_model = model
                     best_score = score
 
-        return bert_model
+        return best_model
 
-    def eval(
-        self,
-        criterion,
-        model,
-        dataloader,
-        dataset,
-        device,
-        n_gpu,
-        eval_fn,
-        eval_params,
-        mode,
-    ):
+    def eval(self, model, dataloader, device, n_gpu, eval_fn):
         if n_gpu > 1 and not isinstance(model, torch.nn.DataParallel):
             model = torch.nn.DataParallel(model)
         eval_loss = 0.0
@@ -251,15 +286,14 @@ class TrainProbingTask(Task):
                 }
 
                 output = model(**input_model)
-                preds = output["preds"]
-
             nb_eval_steps += 1
             if preds is None:
-                preds = preds.detach().cpu().numpy()
+                preds = output["preds"].detach().cpu().numpy()
                 out_label_ids = input_model["labels"].detach().cpu().numpy()
 
             else:
-                preds = np.append(preds, preds.detach().cpu().numpy(), axis=0)
+
+                preds = np.append(preds, output["preds"].detach().cpu().numpy(), axis=0)
 
                 out_label_ids = np.append(
                     out_label_ids, input_model["labels"].detach().cpu().numpy(), axis=0
@@ -267,9 +301,7 @@ class TrainProbingTask(Task):
 
         eval_loss = eval_loss / nb_eval_steps
 
-        score = None
-        if eval_fn is not None:
-            score = eval_fn(preds, out_label_ids)
-            logger.info(f"Score:{score}")
+        score = eval_fn(preds, out_label_ids)
+        logger.info(f"Score:{score}")
 
         return score, preds
