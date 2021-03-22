@@ -12,6 +12,7 @@ class PrepareRicoScaTest(unittest.TestCase):
 
         output = read_input_task.run(TEST_INPUT)
 
+        print(output)
         self.assertEquals(len(output[0]["models"][0]["model_labels"]), 10)
 
     def test_wrong_control_size(self):
