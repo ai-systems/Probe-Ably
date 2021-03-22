@@ -15,9 +15,13 @@ class TrainProbingTest(unittest.TestCase):
 
         prepare_data_probing_task = PrepareDataFromProbingTask()
 
-        dataset = prepare_data_probing_task.run(output)
+        dataset = prepare_data_probing_task.run(output["tasks"])
 
         train_probing_task = TrainProbingTask()
 
         experiments = dict()
-        train_probing_task.run(dataset, experiments)
+        probing_output = train_probing_task.run(
+            dataset, experiments, output["probing_setup"]
+        )
+
+        print(probing_output)

@@ -74,6 +74,8 @@ class ReadInputTask(Task):
                                             "model_vectors": numpy.ndarray
                                             "model_labels": numpy.ndarray
                                             "control_labels": numpy.ndarray
+                                            "representation_size": int,
+                                            "number_of_classes": int,
                                              }
                                     }
                     }
@@ -91,6 +93,8 @@ class ReadInputTask(Task):
             output_dict = dict()
             current_task_id = 0
             task_list = input_data["tasks"]
+
+            ## Getting input info
             for task_content in task_list:
                 output_dict[current_task_id] = dict()
                 output_dict[current_task_id]["task_name"] = task_content["task_name"]
@@ -103,34 +107,34 @@ class ReadInputTask(Task):
                         raise ModelRepresentationFileNotFound(
                             model_content["file_location"]
                         )
-                    else:
-                        model_representation = pd.read_csv(
-                            model_content["file_location"], sep="\t", header=None
-                        )
-                        model_labels = model_representation.iloc[:, -1].to_numpy()
 
-                        model_representation.drop(
-                            model_representation.columns[-1], axis=1, inplace=True
-                        )
-                        model_representation = model_representation.to_numpy()
+                    model_representation = pd.read_csv(
+                        model_content["file_location"], sep="\t", header=None
+                    )
+                    model_labels = model_representation.iloc[:, -1].to_numpy()
+
+                    model_representation.drop(
+                        model_representation.columns[-1], axis=1, inplace=True
+                    )
+                    model_representation = model_representation.to_numpy()
 
                     if "control_location" in model_content:
                         if not os.path.isfile(model_content["control_location"]):
                             raise ModelRepresentationFileNotFound(
                                 model_content["control_location"]
                             )
-                        else:
-                            control_labels = np.loadtxt(
-                                fname=model_content["control_location"],
-                                delimiter="\t",
-                                dtype=int,
-                            )
 
-                            if len(control_labels) != len(model_labels):
-                                raise ControlSizeMissmatch(
-                                    output_dict[current_task_id]["task_name"],
-                                    model_content["model_name"],
-                                )
+                        control_labels = np.loadtxt(
+                            fname=model_content["control_location"],
+                            delimiter="\t",
+                            dtype=int,
+                        )
+
+                        if len(control_labels) != len(model_labels):
+                            raise ControlSizeMissmatch(
+                                output_dict[current_task_id]["task_name"],
+                                model_content["model_name"],
+                            )
                     else:
                         if "control_type" in model_content:
                             control_labels = generate_control_task.run(
@@ -148,10 +152,24 @@ class ReadInputTask(Task):
                         "model_vectors": model_representation,
                         "model_labels": model_labels,
                         "control_labels": control_labels,
+                        "representation_size": model_representation.shape[1],
+                        "number_of_classes": len(np.unique(model_labels)),
                     }
 
                     current_model_id += 1
                 current_task_id += 1
+
+            ## Getting probe info
+
+            probing_setup = {
+                "inter_metric": input_data["probing_setup"]["inter_metric"],
+                "intra_metric": input_data["probing_setup"]["intra_metric"],
+            }
+            num_probing_models = 0
+
+            for probe_model in input_data["probing_setup"]["probing_models"]:
+                probing_setup[num_probing_models] = probe_model
+                num_probing_models += 1
 
         except FileNotFoundError:
             sys.exit(f"Input file not found: {input_file_location}")
@@ -172,4 +190,4 @@ class ReadInputTask(Task):
                 f"Control task for task {e.task_name} and model {e.model_name} does not match the number of labels of the aux task."
             )
 
-        return output_dict
+        return {"tasks": output_dict, "probing_setup": probing_setup}

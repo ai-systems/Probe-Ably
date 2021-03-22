@@ -1,20 +1,21 @@
 {
-	  "probing_class": "probe_ably.core.models.mlp.MLPModel",
+	  "probe_ably.core.models.mlp.MLPModel": {
 	    "params": [
 		        {
 				      "name": "hidden_size",
-				            "type": "range",
-					          "bounds": [32, 1016]
+				            "type": "int_range",
+					          "options": [32, 1016]
 						      },
 						          {
-								        "name": "nlayers",
-									      "type": "range",
-									            "bounds": [1, 5]
+								        "name": "n_layers",
+									      "type": "int_range",
+									            "options": [1, 20]
 										        },
 											    {
 												          "name": "dropout",
-													        "type": "range",
-														      "bounds": [0.0, 1.0]
+													        "type": "float_range",
+														"options": [0.0, 0.5]
 														          }
 															    ]
+	}
 }
