@@ -7,7 +7,7 @@
 					          "options": [32, 1016]
 						      },
 						          {
-								        "name": "nlayers",
+								        "name": "n_layers",
 									      "type": "int_range",
 									            "options": [1, 20]
 										        },
