@@ -1,6 +1,6 @@
 import random
 from typing import Dict
-
+from copy import copy, deepcopy
 import numpy as np
 import torch
 from loguru import logger
@@ -112,7 +112,7 @@ class TrainProbingTask(Task):
         ]
         intra_metric_object = intra_metric_class()
 
-        for id_task, content_tasks in tasks.items():
+        for id_task, content_tasks in tqdm(tasks.items()):
             output_results[id_task] = dict()
             output_results[id_task]["models"] = dict()
             output_results[id_task]["task_name"] = content_tasks["task_name"]
@@ -121,6 +121,7 @@ class TrainProbingTask(Task):
                 output_results[id_task]["models"][id_model][
                     "model_name"
                 ] = model_content["model_name"]
+
                 model_params = {
                     "representation_size": model_content["representation_size"],
                     "n_classes": model_content["number_of_classes"],
@@ -143,12 +144,14 @@ class TrainProbingTask(Task):
                     run_number = 0
                     train_batch_size = probe_content["batch_size"] * max(1, n_gpu)
                     for probe in probing_models:
+                        probe_for_model = deepcopy(probe)
+                        probe_for_control = deepcopy(probe)
                         preds_model = self.start_training_process(
                             train=model_content["model"]["train"],
                             test=model_content["model"]["test"],
                             dev=model_content["model"]["dev"],
                             train_batch_size=train_batch_size,
-                            model=probe,
+                            model=probe_for_model,
                             device=device,
                             num_epochs=probe_content["epochs"],
                             n_gpu=n_gpu,
@@ -164,7 +167,7 @@ class TrainProbingTask(Task):
                             test=test_control_set,
                             dev=model_content["control"]["dev"],
                             train_batch_size=train_batch_size,
-                            model=probe,
+                            model=probe_for_control,
                             device=device,
                             num_epochs=probe_content["epochs"],
                             n_gpu=n_gpu,
@@ -256,7 +259,7 @@ class TrainProbingTask(Task):
 
             with torch.no_grad():
                 if score > best_score:
-                    logger.success(f"Saving new model with best F1-score: {score}")
+                    logger.success(f"Saving new model with best score: {score}")
                     best_model = model
                     best_score = score
 
