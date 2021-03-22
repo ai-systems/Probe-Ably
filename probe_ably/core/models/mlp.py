@@ -11,8 +11,10 @@ class MLPModel(AbstractModel):
     ):  # representation_size=768, n_classes=3, hidden_size=5, n_layers=1, dropout=0.1
         super().__init__()
         self.representation_size = params["representation_size"]
-        self.hidden_size = params["hidden_size"]
         self.n_layers = params["n_layers"]
+        self.hidden_size = params["hidden_size"]
+        if self.hidden_size < 2**self.n_layers:
+            self.hidden_size = 2**self.n_layers
         self.dropout_p = params["dropout"]
         self.n_classes = params["n_classes"]
 
