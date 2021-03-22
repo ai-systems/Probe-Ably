@@ -2,6 +2,7 @@ from typing import Any, Dict, List
 
 from probe_ably.core.models import AbstractModel
 import importlib
+import numpy as np
 import random
 import os
 import glob
@@ -15,7 +16,6 @@ class GridModelFactory:
     ) -> List[AbstractModel]:
 
         paths = glob.glob("./config/params/*.json")
-        print(paths)
 
         params = None
         for path in paths:
@@ -40,20 +40,16 @@ class GridModelFactory:
 
 def choose_params(params: List[Dict]):
     names = [param["name"] for param in params]
-    values = list()
-    for param in params:
-        start, end = (param["bounds"][0], param["bounds"][1])
-        if type(start) == int:
-            values.append(random.randint(start, end))
-        else:
-            values.append(random.uniform(start, end))
+    values = [choose_one_param_value(param) for param in params]
     return dict(zip(names, values))
 
 
-if __name__ == "__main__":
-    params = [
-        {"name": "dog", "bounds": [0.1, 20.3]},
-        {"name": "cat", "bounds": [0.2, 0.5]},
-    ]
-
-    choose_params(params)
+def choose_one_param_value(param):
+    if param["type"] == "float_range":
+        value = random.uniform(float(param["options"][0]), float(param["options"][1]))
+    elif param["type"] == "int_range":
+        value = random.randint(int(param["options"][0]), int(param["options"][1]))
+    elif param["type"] == "categorical":
+        value = np.random_choice(param["options"])
+    else:
+        raise ValueError(f"Invalid or no value options for parameter {params['name']}")
