@@ -4,17 +4,17 @@
 		        {
 				      "name": "hidden_size",
 				            "type": "int_range",
-					          "bounds": [32, 1016]
+					          "options": [32, 1016]
 						      },
 						          {
 								        "name": "nlayers",
 									      "type": "int_range",
-									            "bounds": [1, 20]
+									            "options": [1, 20]
 										        },
 											    {
 												          "name": "dropout",
 													        "type": "float_range",
-														"bounds": [0.0, 5.0]
+														"options": [0.0, 5.0]
 														          }
 															    ]
 	}
