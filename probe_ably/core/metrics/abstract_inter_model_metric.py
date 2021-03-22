@@ -21,3 +21,7 @@ class AbstractInterModelMetric(ABC):
         self, targets1, targets2, predicitons1, predicitons2, **kwargs
     ):
         ...
+
+    @abstractmethod
+    def metric_name(self):
+        ...

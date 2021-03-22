@@ -19,3 +19,7 @@ class AbstractIntraModelMetric(ABC):
     @abstractmethod
     def calculate_metrics(self, targets, predicitons, **kwargs):
         ...
+
+    @abstractmethod
+    def metric_name(self):
+        ...

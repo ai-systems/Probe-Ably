@@ -4,6 +4,8 @@ from typing import Dict
 from loguru import logger
 from overrides import overrides
 from prefect import Task
+from probe_ably.core.metrics.abstract_inter_model_metric import AbstractInterModelMetric
+from probe_ably.core.metrics.abstract_intra_model_metric import AbstractIntraModelMetric
 from tqdm import tqdm
 
 
@@ -17,8 +19,17 @@ class ProcessMetricTask(Task):
         self, train_results: Dict[str, Dict], probing_configuration: Dict[str, Dict]
     ):
         logger.info("Calculating and processing metrics")
-        inter_eval_metric, inter_eval_name = dummy_metric, "inter_metric"
-        intra_eval_metric, intra_eval_name = dummy_metric, "intra_metric"
+        intra_metric = AbstractIntraModelMetric.subclasses[
+            probing_configuration["intra_metric"]
+        ]()
+        inter_metric = AbstractInterModelMetric.subclasses[
+            probing_configuration["inter_metric"]
+        ]()
+        inter_eval_metric, inter_eval_name = (
+            inter_metric,
+            inter_metric.metric_name(),
+        )
+        intra_eval_metric, intra_eval_name = intra_metric, intra_metric.metric_name()
 
         processed_aux_tasks = []
         probing_models, models, x_axis_data, y_axis_data = set(), set(), set(), set()
@@ -41,15 +52,15 @@ class ProcessMetricTask(Task):
                                     p_data["control"]["labels"],
                                     p_data["control"]["preds"],
                                 )
-                                intra_score = intra_eval_metric(
+                                intra_score = intra_eval_metric.calculate_metrics(
+                                    targets=model_gold,
+                                    predicitons=model_preds,
+                                )
+                                inter_score = inter_eval_metric.calculate_metrics(
                                     targets1=model_gold,
                                     targets2=control_gold,
                                     predicitons1=model_preds,
                                     predicitons2=control_preds,
-                                )
-                                inter_score = inter_eval_metric(
-                                    targets=model_gold,
-                                    predicitons=model_preds,
                                 )
                                 processed_task["probings"][
                                     (

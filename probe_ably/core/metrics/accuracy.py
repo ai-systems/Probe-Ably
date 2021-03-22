@@ -8,3 +8,6 @@ class AccuracyMetric(AbstractIntraModelMetric):
 
     def calculate_metrics(self, targets, predicitons, **kwargs):
         return accuracy_score(targets, predicitons)
+
+    def metric_name(self):
+        return "Accuracy"

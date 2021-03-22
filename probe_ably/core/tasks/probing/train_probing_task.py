@@ -1,16 +1,17 @@
+import random
+from typing import Dict
+
+import numpy as np
+import torch
+from loguru import logger
 from overrides import overrides
 from prefect import Task
-from loguru import logger
-from typing import Dict
-import torch
-from torch.utils.data import DataLoader
-import random
-import numpy as np
-from probe_ably.core.utils import GridModelFactory
-from probe_ably.core.models import LinearModel
-from tqdm import tqdm, trange
-from sklearn.metrics import accuracy_score
 from probe_ably.core.metrics import AbstractIntraModelMetric
+from probe_ably.core.models import LinearModel
+from probe_ably.core.utils import GridModelFactory
+from sklearn.metrics import accuracy_score
+from torch.utils.data import DataLoader
+from tqdm import tqdm, trange
 
 
 class TrainProbingTask(Task):
@@ -95,7 +96,6 @@ class TrainProbingTask(Task):
                 }
 
         """
-
         logger.debug("Starting the Probing Training Task")
         torch.cuda.empty_cache()
         device = torch.device(
@@ -143,16 +143,15 @@ class TrainProbingTask(Task):
                     run_number = 0
                     train_batch_size = probe_content["batch_size"] * max(1, n_gpu)
                     for probe in probing_models:
-
                         preds_model = self.start_training_process(
-                            model_content["model"]["train"],
-                            model_content["model"]["test"],
-                            model_content["model"]["dev"],
-                            train_batch_size,
-                            probe,
-                            device,
-                            probe_content["epochs"],
-                            n_gpu,
+                            train=model_content["model"]["train"],
+                            test=model_content["model"]["test"],
+                            dev=model_content["model"]["dev"],
+                            train_batch_size=train_batch_size,
+                            model=probe,
+                            device=device,
+                            num_epochs=probe_content["epochs"],
+                            n_gpu=n_gpu,
                             eval_fn=intra_metric_object.calculate_metrics,
                         )
 
@@ -161,14 +160,14 @@ class TrainProbingTask(Task):
                         else:
                             test_control_set = model_content["control"]["test"]
                         preds_control = self.start_training_process(
-                            model_content["control"]["train"],
-                            test_control_set,
-                            model_content["control"]["dev"],
-                            train_batch_size,
-                            probe,
-                            device,
-                            probe_content["epochs"],
-                            n_gpu,
+                            train=model_content["control"]["train"],
+                            test=test_control_set,
+                            dev=model_content["control"]["dev"],
+                            train_batch_size=train_batch_size,
+                            model=probe,
+                            device=device,
+                            num_epochs=probe_content["epochs"],
+                            n_gpu=n_gpu,
                             eval_fn=intra_metric_object.calculate_metrics,
                         )
                         output_results[id_task]["models"][id_model][probe_model_name][

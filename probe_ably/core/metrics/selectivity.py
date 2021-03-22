@@ -12,3 +12,6 @@ class SelectivityMetric(AbstractInterModelMetric):
         return accuracy_score(targets1, predicitons1) - accuracy_score(
             targets2, predicitons2
         )
+
+    def metric_name(self):
+        return "Selectivity"
