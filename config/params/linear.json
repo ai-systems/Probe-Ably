@@ -3,13 +3,13 @@
 	    "params": [
 		        {
 				"name": "dropout",
-				"type": "range",
-				"bounds": [0.0, 1.0]
+				"type": "float_range",
+				"options": [0.0, 1.0]
 		      },
 		        {
 				"name": "alpha",
-				"type": "range",
-				"bounds": [0.0, 1.0]
+				"type": "float_range",
+				"options": [0.0, 1.0]
 		      }]
 	}
 }
