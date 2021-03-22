@@ -1,5 +1,5 @@
 {
-	  "probing_class": "probe_ably.core.models.mlp.MLPModel",
+	  "probe_ably.core.models.mlp.MLPModel":{
 	    "params": [
 		        {
 				      "name": "hidden_size",
@@ -7,7 +7,7 @@
 					          "bounds": [32, 1016]
 						      },
 						          {
-								        "name": "nlayers",
+								        "name": "n_layers",
 									      "type": "range",
 									            "bounds": [1, 5]
 										        },
@@ -17,4 +17,5 @@
 														      "bounds": [0.0, 1.0]
 														          }
 															    ]
+		}
 }
