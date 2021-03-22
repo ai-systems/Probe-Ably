@@ -4,7 +4,7 @@
 		        {
 				"name": "dropout",
 				"type": "float_range",
-				"options": [0.0, 1.0]
+				"options": [0.0, 0.51]
 		      },
 		        {
 				"name": "alpha",

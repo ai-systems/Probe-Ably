@@ -14,7 +14,7 @@
 											    {
 												          "name": "dropout",
 													        "type": "float_range",
-														      "bounds": [0.0, 1.0]
+														"bounds": [0.0, 5.0]
 														          }
 															    ]
 	}

@@ -49,3 +49,5 @@ def choose_one_param_value(param):
         value = np.random_choice(param['options'])
     else:
         raise ValueError(f"Invalid or no value options for parameter {params['name']}")
+
+    return value
