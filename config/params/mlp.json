@@ -9,7 +9,7 @@
 						          {
 								        "name": "n_layers",
 									      "type": "int_range",
-									            "options": [1, 20]
+									            "options": [1, 4]
 										        },
 											    {
 												          "name": "dropout",

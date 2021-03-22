@@ -1,7 +1,7 @@
 import unittest
 from loguru import logger
 from probe_ably.core.tasks.utils import ReadInputTask
-from probe_ably.core.tasks.probing import PrepareDataFromProbingTask, TrainProbingTask
+from probe_ably.core.tasks.probing import PrepareDataForProbingTask, TrainProbingTask
 
 
 class TrainProbingTest(unittest.TestCase):
@@ -13,15 +13,12 @@ class TrainProbingTest(unittest.TestCase):
 
         output = read_input_task.run(TEST_INPUT)
 
-        prepare_data_probing_task = PrepareDataFromProbingTask()
+        prepare_data_probing_task = PrepareDataForProbingTask()
 
         dataset = prepare_data_probing_task.run(output["tasks"])
 
         train_probing_task = TrainProbingTask()
 
-        experiments = dict()
-        probing_output = train_probing_task.run(
-            dataset, experiments, output["probing_setup"]
-        )
+        probing_output = train_probing_task.run(dataset, output["probing_setup"])
 
         print(probing_output)

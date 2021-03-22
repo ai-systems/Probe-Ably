@@ -119,6 +119,7 @@ class ReadInputTask(Task):
                     model_representation = model_representation.to_numpy()
 
                     if "control_location" in model_content:
+                        default_control = False
                         if not os.path.isfile(model_content["control_location"]):
                             raise ModelRepresentationFileNotFound(
                                 model_content["control_location"]
@@ -136,6 +137,7 @@ class ReadInputTask(Task):
                                 model_content["model_name"],
                             )
                     else:
+                        default_control = True
                         if "control_type" in model_content:
                             control_labels = generate_control_task.run(
                                 model_representation,
@@ -154,6 +156,7 @@ class ReadInputTask(Task):
                         "control_labels": control_labels,
                         "representation_size": model_representation.shape[1],
                         "number_of_classes": len(np.unique(model_labels)),
+                        "default_control": default_control,
                     }
 
                     current_model_id += 1
@@ -164,11 +167,12 @@ class ReadInputTask(Task):
             probing_setup = {
                 "inter_metric": input_data["probing_setup"]["inter_metric"],
                 "intra_metric": input_data["probing_setup"]["intra_metric"],
+                "probing_models": dict(),
             }
             num_probing_models = 0
 
             for probe_model in input_data["probing_setup"]["probing_models"]:
-                probing_setup[num_probing_models] = probe_model
+                probing_setup["probing_models"][num_probing_models] = probe_model
                 num_probing_models += 1
 
         except FileNotFoundError:

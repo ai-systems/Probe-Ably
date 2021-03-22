@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
-class PrepareDataFromProbingTask(Task):
+class PrepareDataForProbingTask(Task):
     # TODO Add some comments
     @staticmethod
     def prepare_entries(vectors, labels):
@@ -79,6 +79,7 @@ class PrepareDataFromProbingTask(Task):
             output_data[id_task]["models"] = dict()
             for model_id, model_content in task_content["models"].items():
                 output_data[id_task]["models"][model_id] = dict()
+
                 output_data[id_task]["models"][model_id][
                     "representation_size"
                 ] = model_content["representation_size"]
@@ -86,6 +87,10 @@ class PrepareDataFromProbingTask(Task):
                 output_data[id_task]["models"][model_id][
                     "number_of_classes"
                 ] = model_content["number_of_classes"]
+
+                output_data[id_task]["models"][model_id][
+                    "default_control"
+                ] = model_content["default_control"]
 
                 output_data[id_task]["models"][model_id]["model_name"] = model_content[
                     "model_name"

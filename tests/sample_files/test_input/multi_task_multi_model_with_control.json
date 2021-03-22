@@ -34,18 +34,21 @@
        }
     ],
     "probing_setup":{
+       
        "intra_metric":"probe_ably.core.metrics.accuracy.AccuracyMetric",
        "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
        "probing_models":[
           {
              "probing_model_name":"probe_ably.core.models.linear.LinearModel",
              "batch_size":5,
-             "generate_models_num":10
+             "epochs":10,
+             "number_of_models":5
           },
           {
              "probing_model_name":"probe_ably.core.models.mlp.MLPModel",
              "batch_size":5,
-             "generate_models_num":10
+             "epochs":20,
+             "number_of_models":10
           }
        ]
     }

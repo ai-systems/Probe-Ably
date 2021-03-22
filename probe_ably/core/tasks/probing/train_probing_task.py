@@ -15,15 +15,8 @@ from probe_ably.core.metrics import AbstractIntraModelMetric
 
 class TrainProbingTask(Task):
     def __init__(self, **kwargs):
-        self.per_gpu_batch_size = kwargs.get("per_gpu_batch_size", 2)
         self.cuda = kwargs.pop("cuda", True)
-        self.num_train_epochs = kwargs.get("num_train_epochs", 5)
         self.logging_steps = kwargs.get("logging_steps", 5)
-        self.probing_model_names = [
-            "probe_ably.core.models.linear.LinearModel",
-            "probe_ably.core.models.mlp.MLPModel",
-        ]
-        self.number_of_probing_models = 2
         super(TrainProbingTask, self).__init__(**kwargs)
 
     def set_seed(self, n_gpu, seed=42):
@@ -35,17 +28,34 @@ class TrainProbingTask(Task):
 
     def start_training_process(
         self,
-        train_dataloader,
-        test_dataloader,
-        dev_dataloader,
+        train,
+        test,
+        dev,
         train_batch_size,
         model,
         device,
         n_gpu,
+        num_epochs,
         eval_fn,
     ):
         outputs = {}
         logger.info("Running train mode")
+        train_dataloader = DataLoader(
+            train,
+            batch_size=train_batch_size,
+            shuffle=True,
+        )
+        dev_dataloader = DataLoader(
+            dev,
+            batch_size=train_batch_size,
+            shuffle=False,
+        )
+        test_dataloader = DataLoader(
+            test,
+            batch_size=train_batch_size,
+            shuffle=False,
+        )
+
         model = model.to(device)
         if n_gpu > 1:
             model = torch.nn.DataParallel(model)
@@ -55,6 +65,7 @@ class TrainProbingTask(Task):
             dev_dataloader,
             device,
             n_gpu,
+            num_epochs,
             eval_fn,
         )
 
@@ -69,7 +80,7 @@ class TrainProbingTask(Task):
         return preds_test
 
     @overrides
-    def run(self, tasks: Dict, experiments: Dict, probing_setup: Dict):
+    def run(self, tasks: Dict, probing_setup: Dict):
         """[summary]
 
         Args:
@@ -82,7 +93,7 @@ class TrainProbingTask(Task):
                                 }
                         }
                 }
-            experiments ([type]): [description]
+
         """
 
         logger.debug("Starting the Probing Training Task")
@@ -95,14 +106,12 @@ class TrainProbingTask(Task):
         self.set_seed(n_gpu)
         self.logger.info(f"GPUs used {n_gpu}")
 
-        train_batch_size = self.per_gpu_batch_size * max(1, n_gpu)
-
-        n_gpu = torch.cuda.device_count()
         output_results = dict()
         intra_metric_class = AbstractIntraModelMetric.subclasses[
             probing_setup["intra_metric"]
         ]
         intra_metric_object = intra_metric_class()
+
         for id_task, content_tasks in tasks.items():
             output_results[id_task] = dict()
             output_results[id_task]["models"] = dict()
@@ -117,67 +126,52 @@ class TrainProbingTask(Task):
                     "n_classes": model_content["number_of_classes"],
                 }
 
-                model_train_dataloader = DataLoader(
-                    model_content["model"]["train"],
-                    batch_size=train_batch_size,
-                    shuffle=True,
-                )
-                model_dev_dataloader = DataLoader(
-                    model_content["model"]["dev"],
-                    batch_size=train_batch_size,
-                    shuffle=False,
-                )
-                model_test_dataloader = DataLoader(
-                    model_content["model"]["test"],
-                    batch_size=train_batch_size,
-                    shuffle=False,
-                )
+                for id_prob_model, probe_content in probing_setup[
+                    "probing_models"
+                ].items():
+                    probe_model_name = probe_content["probing_model_name"]
 
-                control_train_dataloader = DataLoader(
-                    model_content["control"]["train"],
-                    batch_size=train_batch_size,
-                    shuffle=True,
-                )
-                control_dev_dataloader = DataLoader(
-                    model_content["control"]["dev"],
-                    batch_size=train_batch_size,
-                    shuffle=False,
-                )
-                control_test_dataloader = DataLoader(
-                    model_content["control"]["test"],
-                    batch_size=train_batch_size,
-                    shuffle=False,
-                )
-
-                for name in self.probing_model_names:
                     probing_models = GridModelFactory.create_models(
-                        name, self.number_of_probing_models, model_params
+                        probe_model_name,
+                        probe_content["number_of_models"],
+                        model_params,
                     )
-                    output_results[id_task]["models"][id_model][name] = dict()
+
+                    output_results[id_task]["models"][id_model][
+                        probe_model_name
+                    ] = dict()
                     run_number = 0
+                    train_batch_size = probe_content["batch_size"] * max(1, n_gpu)
                     for probe in probing_models:
+
                         preds_model = self.start_training_process(
-                            model_train_dataloader,
-                            model_test_dataloader,
-                            model_dev_dataloader,
+                            model_content["model"]["train"],
+                            model_content["model"]["test"],
+                            model_content["model"]["dev"],
                             train_batch_size,
                             probe,
                             device,
+                            probe_content["epochs"],
                             n_gpu,
                             eval_fn=intra_metric_object.calculate_metrics,
                         )
 
+                        if model_content["default_control"]:
+                            test_control_set = model_content["control"]["train"]
+                        else:
+                            test_control_set = model_content["control"]["test"]
                         preds_control = self.start_training_process(
-                            control_train_dataloader,
-                            control_test_dataloader,
-                            control_dev_dataloader,
+                            model_content["control"]["train"],
+                            test_control_set,
+                            model_content["control"]["dev"],
                             train_batch_size,
                             probe,
                             device,
+                            probe_content["epochs"],
                             n_gpu,
-                            eval_fn=accuracy_score,
+                            eval_fn=intra_metric_object.calculate_metrics,
                         )
-                        output_results[id_task]["models"][id_model][name][
+                        output_results[id_task]["models"][id_model][probe_model_name][
                             run_number
                         ] = {
                             "complexity": probe.get_complexity(),
@@ -186,7 +180,7 @@ class TrainProbingTask(Task):
                                 "preds": preds_model,
                             },
                             "control": {
-                                "labels": model_content["control"]["test"].labels,
+                                "labels": test_control_set.labels,
                                 "preds": preds_control,
                             },
                         }
@@ -200,6 +194,7 @@ class TrainProbingTask(Task):
         dev_dataloader,
         device,
         n_gpu,
+        num_epochs,
         eval_fn,
     ):
         best_score = -1.0
@@ -213,7 +208,7 @@ class TrainProbingTask(Task):
         model.zero_grad()
         train_iterator = trange(
             epochs_trained,
-            int(self.num_train_epochs),
+            int(num_epochs),
             desc="Epoch",
         )
 

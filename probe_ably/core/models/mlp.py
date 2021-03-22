@@ -17,6 +17,8 @@ class MLPModel(AbstractModel):
         self.n_classes = params["n_classes"]
 
         self.mlp = self.build_mlp()
+        print(self.final_hidden_size)
+        print(self.n_classes)
         self.linear = nn.Linear(self.final_hidden_size, self.n_classes)
         self.dropout = nn.Dropout(self.dropout_p)
         self.criterion = nn.CrossEntropyLoss()
