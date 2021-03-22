@@ -13,14 +13,12 @@ class MLPModel(AbstractModel):
         self.representation_size = params["representation_size"]
         self.n_layers = params["n_layers"]
         self.hidden_size = params["hidden_size"]
-        if self.hidden_size < 2**self.n_layers:
-            self.hidden_size = 2**self.n_layers
+        if self.hidden_size < 2 ** self.n_layers:
+            self.hidden_size = 2 ** self.n_layers
         self.dropout_p = params["dropout"]
         self.n_classes = params["n_classes"]
 
         self.mlp = self.build_mlp()
-        print(self.final_hidden_size)
-        print(self.n_classes)
         self.linear = nn.Linear(self.final_hidden_size, self.n_classes)
         self.dropout = nn.Dropout(self.dropout_p)
         self.criterion = nn.CrossEntropyLoss()

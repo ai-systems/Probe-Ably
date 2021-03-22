@@ -18,7 +18,7 @@ train_probing_task = TrainProbingTask()
 with Flow("Running Probe") as flow1:
     parsed_input = read_input_task(INPUT_FILE)
     prepared_data = prepare_data_probing(parsed_input["tasks"])
-    train_probing_task(prepared_data, parsed_input["probing_setup"])
+    train_results = train_probing_task(prepared_data, parsed_input["probing_setup"])
 
 
 FlowRunner(flow=flow1).run()
