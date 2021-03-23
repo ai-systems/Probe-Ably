@@ -64,7 +64,8 @@ class ReadInputTask(Task):
 
            "probing_setup": {
                "inter_metric": string (class for metric to compare model and control task),
-               "intra_metric": string (class for metric that will be used for measuring the best model),
+               "intra_metric": string (class for metric that will be used for measuring
+                the best model),
                "dev_size": int,
                "train_size": int,
                "test_size": int,
@@ -143,7 +144,8 @@ class ReadInputTask(Task):
             sys.exit(
                 f"Error in probing setup: Element {e.type_of_class} with content {e.class_name} not found."
             )
-
+        except ValueError as e:
+            sys.exit(e)
         return {"tasks": output_dict, "probing_setup": probing_setup}
 
     @staticmethod
@@ -224,6 +226,16 @@ class ReadInputTask(Task):
                     "intra_metric", input_data["probing_setup"]["intra_metric"]
                 )
 
+            split_distribution = (
+                input_data["probing_setup"]["train_size"]
+                + input_data["probing_setup"]["test_size"]
+                + input_data["probing_setup"]["dev_size"]
+            )
+
+            if split_distribution != 1:
+                raise ValueError(
+                    f"Train + Test + Dev size should be equals to 1, got {split_distribution}"
+                )
             probing_setup = {
                 "inter_metric": input_data["probing_setup"]["inter_metric"],
                 "intra_metric": input_data["probing_setup"]["intra_metric"],
