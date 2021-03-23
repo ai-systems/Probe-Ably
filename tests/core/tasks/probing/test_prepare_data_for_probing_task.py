@@ -1,7 +1,7 @@
 import unittest
 from loguru import logger
 from probe_ably.core.tasks.utils import ReadInputTask
-from probe_ably.core.tasks.probing import PrepareDataFromProbingTask
+from probe_ably.core.tasks.probing import PrepareDataForProbingTask
 
 
 class PrepareProbingDataTest(unittest.TestCase):
@@ -13,9 +13,11 @@ class PrepareProbingDataTest(unittest.TestCase):
 
         output = read_input_task.run(TEST_INPUT)
 
-        prepare_data_probing_task = PrepareDataFromProbingTask()
+        prepare_data_probing_task = PrepareDataForProbingTask()
 
-        dataset = prepare_data_probing_task.run(output)
+        dataset = prepare_data_probing_task.run(
+            output["tasks"], output["probing_setup"]
+        )
 
         total_size = (
             dataset[0]["models"][0]["model"]["train"].__len__()
@@ -23,7 +25,7 @@ class PrepareProbingDataTest(unittest.TestCase):
             + dataset[0]["models"][0]["model"]["test"].__len__()
         )
 
-        original_size = len(output[0]["models"][0]["model_vectors"])
+        original_size = len(output["tasks"][0]["models"][0]["model_vectors"])
 
         model_element = dataset[0]["models"][0]["model"]["train"].__getitem__(0)[0][0]
         control_element = dataset[0]["models"][0]["control"]["train"].__getitem__(0)[0][

@@ -34,9 +34,9 @@
       }
    ],
    "probing_setup":{
-      "train_size":50,
-      "dev_size":25,
-      "test_size":25,
+      "train_size":0.50,
+      "dev_size":0.25,
+      "test_size":0.25,
       "intra_metric":"probe_ably.core.metrics.accuracy.AccuracyMetric",
       "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
       "probing_models":[

@@ -1,7 +1,7 @@
 {
-    "train_size":60,
-    "dev_size":20,
-    "test_size":20,
+    "train_size":0.6,
+    "dev_size":0.2,
+    "test_size":0.2,
     "intra_metric":"probe_ably.core.metrics.accuracy.AccuracyMetric",
     "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
     "probing_models":[

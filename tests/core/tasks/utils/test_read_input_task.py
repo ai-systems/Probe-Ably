@@ -4,6 +4,12 @@ from probe_ably.core.tasks.utils import ReadInputTask
 
 
 class PrepareRicoScaTest(unittest.TestCase):
+    def test_wrong_split_size(self):
+        TEST_INPUT = "./tests/sample_files/test_input/wrong_split_size.json"
+        read_input_task = ReadInputTask()
+
+        self.assertRaises(SystemExit, read_input_task.run, TEST_INPUT)
+
     def test_multi_task_multi_model_with_control_with_setup(self):
         TEST_INPUT = (
             "./tests/sample_files/test_input/multi_task_multi_model_with_control.json"
@@ -20,7 +26,7 @@ class PrepareRicoScaTest(unittest.TestCase):
 
         output = read_input_task.run(TEST_INPUT)
 
-        self.assertEquals(output["probing_setup"]["train_size"], 60)
+        self.assertEquals(output["probing_setup"]["train_size"], 0.60)
 
     def test_wrong_setup(self):
         TEST_INPUT = "./tests/sample_files/test_input/wrong_setup.json"

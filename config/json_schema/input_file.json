@@ -41,13 +41,19 @@
          "type":"object",
          "properties":{
             "train_size":{
-               "type":"integer"
+               "type":"number",
+               "minimum": 0,
+               "exclusiveMaximum": 1
             },
             "dev_size":{
-               "type":"integer"
+               "type":"number",
+               "minimum": 0,
+               "exclusiveMaximum": 1
             },
             "test_size":{
-               "type":"integer"
+               "type":"number",
+               "minimum": 0,
+               "exclusiveMaximum": 1
             },
             "intra_metric":{
                "type":"string"
