@@ -1,0 +1,21 @@
+{
+    "train_size":60,
+    "dev_size":20,
+    "test_size":20,
+    "intra_metric":"probe_ably.core.metrics.accuracy.AccuracyMetric",
+    "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
+    "probing_models":[
+       {
+          "probing_model_name":"probe_ably.core.models.linear.LinearModel",
+          "batch_size":32,
+          "epochs":25,
+          "number_of_models":50
+       },
+       {
+          "probing_model_name":"probe_ably.core.models.mlp.MLPModel",
+          "batch_size":32,
+          "epochs":25,
+          "number_of_models":50
+       }
+    ]
+ }

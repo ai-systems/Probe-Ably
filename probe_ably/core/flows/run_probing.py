@@ -10,7 +10,7 @@ from probe_ably.core.tasks.metric_task import ProcessMetricTask
 from probe_ably.core.tasks.probing import PrepareDataForProbingTask, TrainProbingTask
 from probe_ably.core.tasks.utils import ReadInputTask, VisualiaztionTask
 
-INPUT_FILE = "examples/bp_config.json"
+INPUT_FILE = "./tests/sample_files/test_input/multi_task_multi_model_with_control.json"
 read_input_task = ReadInputTask()
 prepare_data_probing = PrepareDataForProbingTask()
 train_probing_task = TrainProbingTask()
