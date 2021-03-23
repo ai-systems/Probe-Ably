@@ -8,8 +8,9 @@
 		      },
 		        {
 				"name": "alpha",
+				"transform": "2**x",
 				"type": "float_range",
-				"options": [0.0, 1.0]
+				"options": [-10.0, 3.0]
 		      }]
 	}
 }
