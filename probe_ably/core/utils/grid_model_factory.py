@@ -54,4 +54,10 @@ def choose_one_param_value(param):
     else:
         raise ValueError(f"Invalid or no value options for parameter {params['name']}")
 
+    try:
+        if param['transform']=='2**x':
+            value= 2**(value)
+    except KeyError:
+        pass
+
     return value

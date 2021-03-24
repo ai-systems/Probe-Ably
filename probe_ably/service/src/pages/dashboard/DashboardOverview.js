@@ -1,10 +1,4 @@
-import {
-  Button,
-  ButtonGroup,
-  Col,
-  Nav,
-  Row,
-} from "@themesberg/react-bootstrap";
+import { Col, Nav, Row } from "@themesberg/react-bootstrap";
 import React, { useState } from "react";
 import LineChartWidget from "../../charts/LineChartWidget";
 
@@ -36,15 +30,6 @@ export default ({ aux_tasks }) => {
             </Nav>
           </Col>
         </Row>
-
-        <ButtonGroup>
-          <Button variant="outline-primary" size="sm">
-            Download
-          </Button>
-          <Button variant="outline-primary" size="sm">
-            Copy Latex to Clipboard
-          </Button>
-        </ButtonGroup>
       </div>
 
       {aux_tasks[selectedTask].probings.map((probe, i) => (

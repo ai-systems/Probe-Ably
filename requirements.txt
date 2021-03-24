@@ -3,3 +3,6 @@ prefect
 loguru
 ujson
 overrides
+sklearn
+pandas
+numpy
