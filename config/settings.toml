@@ -1,1 +1,3 @@
 [default]
+input_json_schema =  "./config/json_schema/input_file.json"
+default_probing_setup =  "./config/probing_setup/default_probing_setup.json"

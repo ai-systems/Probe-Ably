@@ -10,7 +10,6 @@ import numpy as np
 
 
 class PrepareDataForProbingTask(Task):
-    # TODO Add some comments
     @staticmethod
     def prepare_entries(vectors, labels):
         dataset = dict()
@@ -19,55 +18,47 @@ class PrepareDataForProbingTask(Task):
 
         return TorchDataset(dataset)
 
-    # TODO Add split sizes to a config file
     @staticmethod
-    def train_val_test_split(
-        X, y, train_size=0.5, val_size=0.2, test_size=0.3, seed=42
-    ):
+    def train_val_test_split(X, y, train_size, val_size, test_size, seed=42):
         X_train_val, X_test, y_train_val, y_test = train_test_split(
             X, y, test_size=test_size, random_state=seed
         )
         relative_train_size = train_size / (val_size + train_size)
+
         X_train, X_val, y_train, y_val = train_test_split(
             X_train_val,
             y_train_val,
-            train_size=relative_train_size,
             test_size=1 - relative_train_size,
             random_state=seed,
         )
+
         return X_train, X_val, X_test, y_train, y_val, y_test
 
-    # TODO ADd proper comments here
     @overrides
-    def run(self, tasks_data: Dict) -> Dict:
-        """[summary]
+    def run(self, tasks_data: Dict, experiment_setup: Dict) -> Dict:
+        """Reads the task_data and experiment_setup, splits into train/dev/test and
+        creates a TorchDataset for each.
 
-        Args:
-            tasks_data (Dict):
-            { task_id:  {'task_name': str,
-                    'models':
-                            {model_id:
-                                    {"model_name": str,
-                                    "model_vectors": numpy.ndarray
-                                    "model_labels": numpy.ndarray
-                                    "control_labels": numpy.ndarray
-                                    "representation_size": int
-                                    "number_of_classes": int
-                                     }
-                            }
-            }
-
-        Returns:
-            Dict: output_data
-            {task_id: {"task_name": str,
-                        "models": {model_id: {
-                                    "model_name": str,
-                                    "model": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
-                                    "control": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
-                                    }
-                                }
-                        }
+        :param tasks_data: Tasks info obtained from user input
+        :type tasks_data: Dict
+        :param experiment_setup: Experiment setup obtained from default file or user input
+        :type experiment_setup: Dict
+        :return: Dictonary of processed data in the format:
+        { task_id:
+            {'task_name': str,
+            'models':
+                {model_id:
+                    {"model_name": str,
+                        "model": {"train": numpy.ndarray, "dev": numpy.ndarray, "test": numpy.ndarray},
+                        "control": {"train": numpy.ndarray, "dev": numpy.ndarray, "test": numpy.ndarray},
+                        "representation_size": int,
+                        "number_of_classes": int,
+                        "default_control": boolean (False if user inputs control task)
+                    }
                 }
+            }
+        }
+        :rtype: Dict
         """
 
         logger.debug("Prepare the data for probing.")
@@ -104,7 +95,11 @@ class PrepareDataForProbingTask(Task):
                     model_labels_val,
                     model_labels_test,
                 ) = self.train_val_test_split(
-                    model_content["model_vectors"], model_content["model_labels"]
+                    X=model_content["model_vectors"],
+                    y=model_content["model_labels"],
+                    train_size=experiment_setup["train_size"],
+                    val_size=experiment_setup["dev_size"],
+                    test_size=experiment_setup["test_size"],
                 )
 
                 output_data[id_task]["models"][model_id]["model"] = {
@@ -123,7 +118,11 @@ class PrepareDataForProbingTask(Task):
                     control_labels_val,
                     control_labels_test,
                 ) = self.train_val_test_split(
-                    model_content["model_vectors"], model_content["control_labels"]
+                    X=model_content["model_vectors"],
+                    y=model_content["control_labels"],
+                    train_size=experiment_setup["train_size"],
+                    val_size=experiment_setup["dev_size"],
+                    test_size=experiment_setup["test_size"],
                 )
 
                 output_data[id_task]["models"][model_id]["control"] = {

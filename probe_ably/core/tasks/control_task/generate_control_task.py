@@ -3,6 +3,7 @@ from prefect import Task
 import numpy as np
 import pandas as pd
 
+
 # TODO properly comment this
 class GenerateControlTask(Task):
     @staticmethod
@@ -16,7 +17,8 @@ class GenerateControlTask(Task):
         return random_labels
 
     @overrides
-    def run(self, input_data, input_labels, control_type="random"):
+    def run(self, input_data, input_labels):
+
         unique_labels = self.get_unique_labels(input_labels)
 
         output_labels = self.generate_random_labels(unique_labels, len(input_labels))
