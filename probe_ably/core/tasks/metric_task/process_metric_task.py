@@ -119,7 +119,7 @@ class ProcessMetricTask(Task):
                             ):
                                 m_data = {
                                     "id": model_name,
-                                    "color": f"hsl(190, {int(random.randint(1,9))*10}%, {int(random.randint(1,9))*10}%)",
+                                    "color": f"hsl({random.randint(1,360)}, {int(random.randint(1,9))*10}%, {int(random.randint(1,9))*10}%)",
                                 }
                                 m_data["data"] = []
                                 x, y = [], []
