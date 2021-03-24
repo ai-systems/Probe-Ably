@@ -19,7 +19,9 @@ visualization_task = VisualiaztionTask()
 
 with Flow("Running Probe") as flow1:
     parsed_input = read_input_task(INPUT_FILE)
-    prepared_data = prepare_data_probing(parsed_input["tasks"])
+    prepared_data = prepare_data_probing(
+        parsed_input["tasks"], parsed_input["probing_setup"]
+    )
     train_results = train_probing_task(prepared_data, parsed_input["probing_setup"])
     processed_results = process_metric_task(
         train_results, parsed_input["probing_setup"]

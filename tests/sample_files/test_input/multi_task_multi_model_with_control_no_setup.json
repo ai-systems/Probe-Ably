@@ -32,26 +32,5 @@
             }
          ]
       }
-   ],
-   "probing_setup":{
-      "train_size":0.50,
-      "dev_size":0.25,
-      "test_size":0.25,
-      "intra_metric":"probe_ably.core.metrics.accuracy.AccuracyMetric",
-      "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
-      "probing_models":[
-         {
-            "probing_model_name":"probe_ably.core.models.linear.LinearModel",
-            "batch_size":5,
-            "epochs":10,
-            "number_of_models":5
-         },
-         {
-            "probing_model_name":"probe_ably.core.models.mlp.MLPModel",
-            "batch_size":5,
-            "epochs":20,
-            "number_of_models":10
-         }
-      ]
-   }
+   ]
 }

@@ -12,6 +12,7 @@ from probe_ably.core.utils import GridModelFactory
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 from tqdm import tqdm, trange
+from colorama import Fore
 
 
 class TrainProbingTask(Task):
@@ -81,21 +82,39 @@ class TrainProbingTask(Task):
         return preds_test
 
     @overrides
-    def run(self, tasks: Dict, probing_setup: Dict):
-        """[summary]
+    def run(self, tasks: Dict, probing_setup: Dict) -> Dict:
+        """Runs the Probing models
 
-        Args:
-            tasks ([Dict]): {task_id: {"task_name": str,
-                        "models": {model_id: {
-                                                "model_name": str,
-                                                "model": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
-                                                "control": { "train": TorchDataset, "dev": TorchDataset, "test": TorchDataset }
-                                            }
-                                }
+        :param tasks: Data content of the models for probing.
+        :type tasks: Dict
+        :param probing_setup: Experiment setup for probing.
+        :type probing_setup: Dict
+        :return: Dictionary containing the following values:
+        {int(task id) :
+            "models": {
+                int(model id) : {
+                    str (name of probing model) : {
+                        int (run number) : {
+                            "complexity": {
+                                str (name of metric): float (value for the complexity)
+                            }
+                            "model" : {
+                                "labels": array (original labels for the auxiliary task)
+                                "preds": array (predicted labels for the auxiliary task)
+                            }
+                            "control": {
+                                "labels": array (original labels for the control task)
+                                "preds": array (predicted labels for the control task)
+
                         }
+                    }
                 }
+            }
+        }
 
+        :rtype: Dict
         """
+
         logger.debug("Starting the Probing Training Task")
         torch.cuda.empty_cache()
         device = torch.device(
@@ -112,13 +131,29 @@ class TrainProbingTask(Task):
         ]
         intra_metric_object = intra_metric_class()
 
-        for id_task, content_tasks in tqdm(tasks.items(), desc="Task"):
+        task_loop_bar = tqdm(
+            tasks.items(),
+            desc=f"Task progress",
+            bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.GREEN, Fore.RESET),
+        )
+        for id_task, content_tasks in task_loop_bar:
+
+            task_loop_bar.set_description(
+                f"Task: {content_tasks['task_name']} progress"
+            )
             output_results[id_task] = dict()
             output_results[id_task]["models"] = dict()
             output_results[id_task]["task_name"] = content_tasks["task_name"]
-            for id_model, model_content in tqdm(
-                content_tasks["models"].items(), desc="Model"
-            ):
+            model_loop_bar = tqdm(
+                content_tasks["models"].items(),
+                desc=f"Model progress",
+                bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET),
+                leave=False,
+            )
+            for id_model, model_content in model_loop_bar:
+                model_loop_bar.set_description(
+                    f"Model: {model_content['model_name']} progress"
+                )
                 output_results[id_task]["models"][id_model] = dict()
                 output_results[id_task]["models"][id_model][
                     "model_name"
@@ -145,10 +180,18 @@ class TrainProbingTask(Task):
                     ] = dict()
                     run_number = 0
                     train_batch_size = probe_content["batch_size"] * max(1, n_gpu)
-                    # logger.info(
-                    #     f"Running {probe_model_name} for {output_results[id_task]['task_name']}, model:  {model_content['model_name']}"
-                    # )
-                    for probe in tqdm(probing_models, desc="Probing model"):
+
+                    probes_loop_bar = tqdm(
+                        probing_models,
+                        desc="Probe Progress",
+                        leave=False,
+                        bar_format="{l_bar}%s{bar}%s{r_bar}"
+                        % (Fore.YELLOW, Fore.RESET),
+                    )
+                    for probe in probes_loop_bar:
+                        probes_loop_bar.set_description(
+                            f"Probe: {probe_model_name} progress"
+                        )
                         probe_for_model = deepcopy(probe)
                         probe_for_control = deepcopy(probe)
                         preds_model = self.start_training_process(

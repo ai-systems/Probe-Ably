@@ -41,7 +41,7 @@
       "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
       "probing_models":[
          {
-            "probing_model_name":"probe_ably.core.models.linear.LinearModel",
+            "probing_model_name":"probe_ably.core.models.linear.Linearodel",
             "batch_size":5,
             "epochs":10,
             "number_of_models":5

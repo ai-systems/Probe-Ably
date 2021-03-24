@@ -38,7 +38,7 @@
       "dev_size":0.25,
       "test_size":0.25,
       "intra_metric":"probe_ably.core.metrics.accuracy.AccuracyMetric",
-      "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
+      "inter_metric":"probe_ably.core.metrics.selectivity.SelectivitMetric",
       "probing_models":[
          {
             "probing_model_name":"probe_ably.core.models.linear.LinearModel",
