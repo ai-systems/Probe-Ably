@@ -184,14 +184,16 @@ class ReadInputTask(Task):
             control_labels = generate_control_task.run(
                 model_representation, model_labels
             )
-
+        total_number_of_classes = (
+            np.amax(np.concatenate((model_labels, control_labels))) + 1
+        )
         return {
             "model_name": model_content["model_name"],
             "model_vectors": model_representation,
             "model_labels": model_labels,
             "control_labels": control_labels,
             "representation_size": model_representation.shape[1],
-            "number_of_classes": len(np.unique(model_labels)),
+            "number_of_classes": total_number_of_classes,
             "default_control": default_control,
         }
 
