@@ -6,3 +6,4 @@ overrides
 sklearn
 pandas
 numpy
+click
