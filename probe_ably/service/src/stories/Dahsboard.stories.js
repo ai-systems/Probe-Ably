@@ -57,6 +57,28 @@ SingleTab.args = {
                   data: [
                     {
                       x: "plane",
+                      y: 150,
+                    },
+                    {
+                      x: "helicopter",
+                      y: 200,
+                    },
+                    {
+                      x: "boat",
+                      y: 54,
+                    },
+                    {
+                      x: "train",
+                      y: 126,
+                    },
+                  ],
+                },
+                {
+                  id: "china",
+                  color: "hsl(12, 70%, 50%)",
+                  data: [
+                    {
+                      x: "plane",
                       y: 175,
                     },
                     {
