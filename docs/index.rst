@@ -3,13 +3,32 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Probe-Ably's documentation!
-======================================
+Probe-Ably
+=======================================================================================================================
+
+Probing framework for PyTorch modules
+
+Features
+-----------------------------------------------------------------------------------------------------------------------
+
+- Feature 1
+- Feature 2
+
+.. image:: diagram.png
+
+
+
+
+
+.. .. automodule:: probe_ably.core
+..     :members:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Get started
 
+   installation
+   quicktour
 
 
 Indices and tables
