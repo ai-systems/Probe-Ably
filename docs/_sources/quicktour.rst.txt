@@ -1,0 +1,16 @@
+Quick tour
+=======================================================================================================================
+
+Let's have a quick look at the 🤗 Transformers library features. The library downloads pretrained models for Natural
+Language Understanding (NLU) tasks, such as analyzing the sentiment of a text, and Natural Language Generation (NLG),
+such as completing a prompt with new text or translating in another language.
+
+First we will see how to easily leverage the pipeline API to quickly use those pretrained models at inference. Then, we
+will dig a little bit more and see how the library gives you access to those models and helps you preprocess your data.
+
+.. note::
+
+    All code examples presented in the documentation have a switch on the top left for Pytorch versus TensorFlow. If
+    not, the code is expected to work for both backends without any change needed.
+
+Getting started on a task with a pipeline
