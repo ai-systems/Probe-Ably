@@ -224,7 +224,7 @@ class TrainProbingTask(Task):
                         output_results[id_task]["models"][id_model][probe_model_name][
                             run_number
                         ] = {
-                            "complexity": probe.get_complexity(),
+                            "complexity": probe_for_model.get_complexity(),
                             "model": {
                                 "labels": model_content["model"]["test"].labels,
                                 "preds": preds_model,
