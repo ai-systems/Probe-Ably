@@ -40,6 +40,7 @@ export default ({ aux_tasks }) => {
             style={{ padding: "10px" }}
           >
             <LineChartWidget
+              task_name={aux_tasks[selectedTask].name}
               title={probe.model_name}
               probing_data={probe.probing_results}
               probing_types={probe.probing_types}

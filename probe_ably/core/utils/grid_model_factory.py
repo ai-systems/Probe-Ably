@@ -38,10 +38,53 @@ class GridModelFactory:
 
         ModelClass = AbstractModel.subclasses[model_class]
 
+        generated_params = dict()
+        i = 0
+        for param in params:
+
+            if param["type"] == "float_range":
+                if param["name"] == "alpha":
+                    generated_params[param["name"]] = np.array(
+                        [0]
+                        + [
+                            2 ** x
+                            for x in np.linspace(
+                                start=-10, stop=3, num=(num_models - 1)
+                            )
+                        ]
+                    )
+                else:
+                    generated_params[param["name"]] = np.random.uniform(
+                        low=float(param["options"][0]),
+                        high=float(param["options"][1]),
+                        size=(num_models,),
+                    )
+
+            elif param["type"] == "int_range":
+                if param["name"] == "hidden_size":
+                    generated_params[param["name"]] = random.choices(
+                        list({int(2 ** x) for x in np.arange(5, 10, 0.01)}),
+                        k=num_models,
+                    )
+                else:
+                    generated_params[param["name"]] = random.choices(
+                        range(int(param["options"][0]), int(param["options"][1])),
+                        k=num_models,
+                    )
+
+            elif param["type"] == "categorical":
+                value = np.random_choice(param["options"])
+
+        chosen_params_dict = dict()
+        for i in range(num_models):
+            chosen_params_dict[i] = dict()
+            for key_name, values in generated_params.items():
+                chosen_params_dict[i][key_name] = values[i]
+
         models = []
         for i in range(num_models):
-            chosen_params = _choose_params(params)
-            model = ModelClass({**chosen_params, **param_args})
+            # chosen_params = choose_params(params)
+            model = ModelClass({**chosen_params_dict[i], **param_args})
             models.append(model)
 
         return models

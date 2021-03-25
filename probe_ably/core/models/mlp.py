@@ -1,3 +1,5 @@
+## ADAPTED FROM https://github.com/rycolab/pareto-probing/blob/master/src/h02_learn/model/mlp.py
+
 from typing import Dict
 
 import numpy as np
@@ -25,7 +27,7 @@ class MLPModel(AbstractModel):
                         'n_classes': Number of classes for classification,
                     }
         """
-        super(params).__init__()
+        super().__init__(params)
         self.n_layers = params["n_layers"]
         self.hidden_size = params["hidden_size"]
         if self.hidden_size < 2 ** self.n_layers:

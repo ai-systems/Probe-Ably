@@ -130,6 +130,48 @@ SingleTab.args = {
   ],
 };
 
+export const SingleTabValues = Template.bind({});
+
+SingleTabValues.args = {
+  aux_tasks: [
+    {
+      id: "1",
+      name: "Task name 1",
+      probings: [
+        {
+          model_name: "MLP",
+          probing_results: [
+            {
+              x_axis: "Number of Parameter",
+              y_axis: "Accuracy",
+              chart_data: [
+                {
+                  id: "japan",
+                  color: "hsl(190, 70%, 50%)",
+                  data: [
+                    {
+                      x: 100000000,
+                      y: 175,
+                    },
+                    {
+                      x: 110000000,
+                      y: 295,
+                    },
+                    {
+                      x: 120000000,
+                      y: 54,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 export const MultipleTask = Template.bind({});
 
 MultipleTask.args = {
