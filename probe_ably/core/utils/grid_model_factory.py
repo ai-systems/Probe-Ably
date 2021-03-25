@@ -29,10 +29,49 @@ class GridModelFactory:
 
         ModelClass = AbstractModel.subclasses[model_class]
 
+        generated_params = dict()
+        i = 0
+        for param in params:
+
+            if param["type"] == "float_range":
+                if param["name"] == "alpha":
+                    generated_params[param["name"]] = np.array(
+                        [0]
+                        + [
+                            2 ** x
+                            for x in np.linspace(
+                                start=-10, stop=3, num=(num_models - 1)
+                            )
+                        ]
+                    )
+                else:
+                    generated_params[param["name"]] = np.random.uniform(
+                        low=float(param["options"][0]),
+                        high=float(param["options"][1]),
+                        size=(num_models,),
+                    )
+
+            elif param["type"] == "int_range":
+                generated_params[param["name"]] = random.sample(
+                    range(int(param["options"][0]), int(param["options"][1])),
+                    num_models,
+                )
+
+            elif param["type"] == "categorical":
+                value = np.random_choice(param["options"])
+
+        chosen_params_dict = dict()
+        for i in range(num_models):
+            chosen_params_dict[i] = dict()
+            for key_name, values in generated_params.items():
+
+                chosen_params_dict[i][key_name] = values[i]
+
+        print(chosen_params_dict)
         models = []
         for i in range(num_models):
-            chosen_params = choose_params(params)
-            model = ModelClass({**chosen_params, **param_args})
+            # chosen_params = choose_params(params)
+            model = ModelClass({**chosen_params_dict[i], **param_args})
             models.append(model)
 
         return models
@@ -55,8 +94,8 @@ def choose_one_param_value(param):
         raise ValueError(f"Invalid or no value options for parameter {params['name']}")
 
     try:
-        if param['transform']=='2**x':
-            value= 2**(value)
+        if param["transform"] == "2**x":
+            value = 2 ** (value)
     except KeyError:
         pass
 
