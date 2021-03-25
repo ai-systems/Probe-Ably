@@ -22,5 +22,5 @@ class VisualiaztionTask(Task):
             webbrowser.get("google-chrome").open(ip_address)
         except:
             logger.info(
-                "Tried to launch Google Chrom and Failed. Visit: {ip_address} to view the visualization"
+                f"Tried to launch Google Chrom and Failed. Visit: {ip_address} to view the visualization"
             )

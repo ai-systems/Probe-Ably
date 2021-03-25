@@ -3,7 +3,7 @@ import {
   Container,
   Navbar,
   Row,
-  Spinner
+  Spinner,
 } from "@themesberg/react-bootstrap";
 import React, { useEffect, useState } from "react";
 import Dashboard from "./dashboard/DashboardOverview";
@@ -27,11 +27,9 @@ export default () => {
         bg="dark"
         className="navbar-transparent navbar-theme-primary my-2"
       >
-        <Container className="position-relative">
-          <Navbar.Brand href="#" className="me-lg-3">
-            ProBe-Ably
-          </Navbar.Brand>
-        </Container>
+        <Navbar.Brand href="#" className="me-md-3" style={{ padding: 5 }}>
+          ProBe-Ably
+        </Navbar.Brand>
       </Navbar>
       <main style={{ padding: 20 }}>
         {auxTasks == null ? (
