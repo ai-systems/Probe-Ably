@@ -1,11 +1,14 @@
 # About Us
 
+**Website**: 
+https://ai-systems-lab.org/
+
 **Twitter**: 
 https://twitter.com/AISystemsUoM
 
 **People**:
 
-Julia Rozanova <julia.rozanova@postgrad.manchester.ac.uk>
+Julia Rozanova <julia.rozanova@manchester.ac.uk>
 
 Deborah Ferreira <deborah.ferreira@machester.ac.uk>
 
