@@ -170,15 +170,16 @@
             
   <div class="section" id="probe-ably-parrot">
 <h1>Probe-Ably <a class="reference internal" href="_images/everythingsfineparrot.gif"><img alt="parrot" src="_images/everythingsfineparrot.gif" style="width: 25.6px; height: 25.6px;" /></a><a class="headerlink" href="#probe-ably-parrot" title="Permalink to this headline">¶</a></h1>
-<p>Probe-Ably is a tool designed for PyTorch to support researchers in the implementation of probes for neural representations in a flexible and extensible way.</p>
-<p>The core facility provided by Probe-Ably is the encapsulation of the experimental probings pipeline. Specifically, Probe-Ably provides a complete implementation of the core tasks necessary for probings neural representations, starting from the configuration and training of heterogeneous probe models, to the calculation and visualization of metrics for the evaluation.</p>
-<p>The probing pipeline and the core tasks operate on a set of abstract classes, making the whole framework agnostic to the specific representations, auxiliary task, probe models, and metrics used in the concrete experiments.</p>
+<p>Probe-Ably is a framework designed for PyTorch to support researchers in the implementation of probes for neural representations in a flexible and extensible way.</p>
+<p>The core facility provided by Probe-Ably is the encapsulation of the end-to-end experimental probing pipeline. Specifically, Probe-Ably provides a complete implementation of the core tasks necessary for probing neural representations, starting from the configuration and training of heterogeneous probe models, to the calculation and visualization of metrics for the evaluation.</p>
+<p>The probing pipeline and the core tasks operate on a set of abstract classes, making the whole framework agnostic to the specific representation, auxiliary task, probe model, and metrics used in the concrete experiments.</p>
 <div class="section" id="architectural-design">
 <h2>Architectural Design<a class="headerlink" href="#architectural-design" title="Permalink to this headline">¶</a></h2>
 <img alt="_images/diagram.png" src="_images/diagram.png" />
 <p>This architectural design allows the user to:</p>
 <ul class="simple">
 <li><p>Configure and run probing experiments on different representations and auxiliary tasks in parallel;</p></li>
+<li><p>Automatically generate control tasks for the probing, allowing the computation of inter-model metrics such as Selectivity;</p></li>
 <li><p>Extend the suite of probes with new models without the need to change the core probing pipeline;</p></li>
 <li><p>Customize, implement and adopt novel evaluation metrics for the experiments.</p></li>
 </ul>

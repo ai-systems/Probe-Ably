@@ -97,6 +97,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../utils/grid_factory.html">Grid Model Factory</a></li>
 </ul>
+<p class="caption"><span class="caption-text">About Us</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contacts.html">About Us</a></li>
+</ul>
 
             
           
@@ -202,10 +206,53 @@
 
         <span class="n">ModelClass</span> <span class="o">=</span> <span class="n">AbstractModel</span><span class="o">.</span><span class="n">subclasses</span><span class="p">[</span><span class="n">model_class</span><span class="p">]</span>
 
+        <span class="n">generated_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;float_range&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span>
+                    <span class="n">generated_params</span><span class="p">[</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="o">+</span> <span class="p">[</span>
+                            <span class="mi">2</span> <span class="o">**</span> <span class="n">x</span>
+                            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                                <span class="n">start</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="p">(</span><span class="n">num_models</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">generated_params</span><span class="p">[</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                        <span class="n">low</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="n">high</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                        <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">num_models</span><span class="p">,),</span>
+                    <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;int_range&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span>
+                    <span class="n">generated_params</span><span class="p">[</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
+                        <span class="nb">list</span><span class="p">({</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)}),</span>
+                        <span class="n">k</span><span class="o">=</span><span class="n">num_models</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">generated_params</span><span class="p">[</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span>
+                        <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">])),</span>
+                        <span class="n">k</span><span class="o">=</span><span class="n">num_models</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;categorical&quot;</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random_choice</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">])</span>
+
+        <span class="n">chosen_params_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_models</span><span class="p">):</span>
+            <span class="n">chosen_params_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key_name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">generated_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">chosen_params_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
         <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_models</span><span class="p">):</span>
-            <span class="n">chosen_params</span> <span class="o">=</span> <span class="n">_choose_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">ModelClass</span><span class="p">({</span><span class="o">**</span><span class="n">chosen_params</span><span class="p">,</span> <span class="o">**</span><span class="n">param_args</span><span class="p">})</span>
+            <span class="c1"># chosen_params = choose_params(params)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">ModelClass</span><span class="p">({</span><span class="o">**</span><span class="n">chosen_params_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">**</span><span class="n">param_args</span><span class="p">})</span>
             <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">models</span></div></div>
