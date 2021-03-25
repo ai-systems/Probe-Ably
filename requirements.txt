@@ -11,3 +11,4 @@ click
 torch
 colorama
 jsonschema
+flask
