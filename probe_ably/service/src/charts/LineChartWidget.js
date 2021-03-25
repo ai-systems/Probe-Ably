@@ -12,7 +12,7 @@ import ReactDOM from "react-dom";
 import "svg2pdf.js";
 
 export default (props) => {
-  const { title, probing_data, probing_types } = props;
+  const { title, probing_data, task_name } = props;
   const linechartRefs = useRef([]);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default (props) => {
 
   return (
     <Card
-      className="bg-secondary-alt shadow-sm"
+      className="bg-secondamyPDFry-alt shadow-sm"
       style={{ background: "white" }}
     >
       <Card.Header className="d-flex flex-row align-items-center flex-0">
@@ -80,10 +80,11 @@ export default (props) => {
                           orient: "bottom",
                           tickSize: 5,
                           tickPadding: 5,
-                          tickRotation: 0,
+                          tickRotation: 90,
                           legend: p_data.x_axis,
                           legendPosition: "middle",
-                          legendOffset: 46,
+                          format: (value) => value.toExponential(2),
+                          legendOffset: 60,
                         }}
                         axisLeft={{
                           orient: "left",
@@ -178,7 +179,16 @@ export default (props) => {
                           })
                           .then(() => {
                             // save the created pdf
-                            doc.save("myPDF.pdf");
+                            doc.save(
+                              p_data.x_axis +
+                                "-" +
+                                p_data.y_axis +
+                                "-" +
+                                title +
+                                "-" +
+                                task_name +
+                                ".pdf",
+                            );
                           });
 
                         // img.setAttribute(
