@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+import numpy as np
+
 
 class AbstractIntraModelMetric(ABC):
 
@@ -17,9 +19,23 @@ class AbstractIntraModelMetric(ABC):
         cls.subclasses[name] = cls
 
     @abstractmethod
-    def calculate_metrics(self, targets, predicitons, **kwargs):
+    def calculate_metrics(self, targets: np.array, predicitons: np.array, **kwargs):
+        """Abstract method that calcuate the intra model metric
+
+        Args:
+            targets (np.array): Gold labels of data
+            predicitons (np.array): Predictions  of data
+
+        Returns:
+            float: Intra model metric score
+        """
         ...
 
     @abstractmethod
     def metric_name(self):
+        """Abstract method returns the name of metric. Used for visualization purposes
+
+        Returns:
+            str: Metric name
+        """
         ...
