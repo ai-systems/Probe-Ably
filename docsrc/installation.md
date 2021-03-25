@@ -29,4 +29,8 @@ pip install -r requirements-dev.txt
 
 ## Using Docker Image
 
-You will additionally need to install NVIDIA-Docker (https://github.com/NVIDIA/nvidia-docker)
+you will additionally need to install NVIDIA-Docker (https://github.com/NVIDIA/nvidia-docker)
+
+```
+nvidia-docker run -v $(pwd)/tests:/app/Probe-Ably/configurations -p 8031:8031 -it probe-ably bash
+```
