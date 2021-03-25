@@ -46,6 +46,11 @@ This architectural design allows the user to:
 
    utils/grid_factory
 
+.. toctree::
+   :maxdepth: 1
+   :caption: About Us
+
+   contacts
 
 Indices and tables
 ==================
