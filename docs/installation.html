@@ -89,9 +89,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pre-requisites">Pre-Requisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-probe-ably">Installing Probe-Ably</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-docker-image">Using Docker Image</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quicktour.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
 <ul>
@@ -198,6 +200,14 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">-</span><span class="n">dev</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="using-docker-image">
+<h2>Using Docker Image<a class="headerlink" href="#using-docker-image" title="Permalink to this headline">¶</a></h2>
+<p>If you want GPU support you will need to install NVIDIA Container Toolkit from: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html and Docker &gt;= <em>19.03</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --gpus all -v $(pwd):/app/Probe-Ably/configurations -p 8031:8031 -it aisystems/probe-ably bash
+</pre></div>
+</div>
+<p>The Docker container exposes <code class="docutils literal notranslate"><span class="pre">/app/Probe-Ably/configurations</span></code> volume for external data facilitating the load of configurations file along with <code class="docutils literal notranslate"><span class="pre">8031</span></code> port.</p>
 </div>
 </div>
 

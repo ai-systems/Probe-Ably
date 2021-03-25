@@ -33,7 +33,6 @@ This architectural design allows the user to:
 
    installation
    quicktour
-   examples
 
 .. toctree::
    :maxdepth: 2
