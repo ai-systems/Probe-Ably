@@ -12,3 +12,4 @@ torch
 colorama
 jsonschema
 flask
+flask-cors
