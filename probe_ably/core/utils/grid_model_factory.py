@@ -61,10 +61,16 @@ class GridModelFactory:
                     )
 
             elif param["type"] == "int_range":
-                generated_params[param["name"]] = random.choices(
-                    range(int(param["options"][0]), int(param["options"][1])),
-                    k=num_models,
-                )
+                if param["name"] == "hidden_size":
+                    generated_params[param["name"]] = random.choices(
+                        list({int(2 ** x) for x in np.arange(5, 10, 0.01)}),
+                        k=num_models,
+                    )
+                else:
+                    generated_params[param["name"]] = random.choices(
+                        range(int(param["options"][0]), int(param["options"][1])),
+                        k=num_models,
+                    )
 
             elif param["type"] == "categorical":
                 value = np.random_choice(param["options"])
