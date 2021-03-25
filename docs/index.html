@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Probe-Ably &mdash; Probe-Ably 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> Probe-Ably
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Get started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quicktour.html">Quick Start</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advanced/configurations.html">Probing Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/inter_metrics.html">Probing Inter Model Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/intra_metrics.html">Probing Intra Model Metrics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="utils/grid_factory.html">Grid Model Factory</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Probe-Ably</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Probe-Ably </li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="probe-ably-parrot">
+<h1>Probe-Ably <a class="reference internal" href="_images/everythingsfineparrot.gif"><img alt="parrot" src="_images/everythingsfineparrot.gif" style="width: 25.6px; height: 25.6px;" /></a><a class="headerlink" href="#probe-ably-parrot" title="Permalink to this headline">¶</a></h1>
+<p>Probe-Ably is a tool designed for PyTorch to support researchers in the implementation of probes for neural representations in a flexible and extensible way.</p>
+<p>The core facility provided by Probe-Ably is the encapsulation of the experimental probings pipeline. Specifically, Probe-Ably provides a complete implementation of the core tasks necessary for probings neural representations, starting from the configuration and training of heterogeneous probe models, to the calculation and visualization of metrics for the evaluation.</p>
+<p>The probing pipeline and the core tasks operate on a set of abstract classes, making the whole framework agnostic to the specific representations, auxiliary task, probe models, and metrics used in the concrete experiments.</p>
+<div class="section" id="architectural-design">
+<h2>Architectural Design<a class="headerlink" href="#architectural-design" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/diagram.png" src="_images/diagram.png" />
+<p>This architectural design allows the user to:</p>
+<ul class="simple">
+<li><p>Configure and run probing experiments on different representations and auxiliary tasks in parallel;</p></li>
+<li><p>Extend the suite of probes with new models without the need to change the core probing pipeline;</p></li>
+<li><p>Customize, implement and adopt novel evaluation metrics for the experiments.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Get started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#pre-requisites">Pre-Requisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-probe-ably">Installing Probe-Ably</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quicktour.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quicktour.html#representation-file">Representation File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quicktour.html#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quicktour.html#launching-your-first-probe">Launching Your First Probe</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advanced/configurations.html">Probing Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/inter_metrics.html">Probing Inter Model Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/inter_metrics.html#available-metrics">Available Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/inter_metrics.html#implementing-new-metrics">Implementing New Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/intra_metrics.html">Probing Intra Model Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/intra_metrics.html#available-metrics">Available Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/intra_metrics.html#implementing-new-metrics">Implementing New Metrics</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="utils/grid_factory.html">Grid Model Factory</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Julia Rozanova, Deborah Ferreira, Marco Valentino, Mokanarangan Thayaparan and Andre Freitas.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Probing Models
+
+Currenlty we have the following available models:
+- `probe_ably.core.models.mlp.MLPModel`: Multi Layer Perceptron
+- `probe_ably.core.models.linear.LinearModel`: Linear Layer
+

@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Probing Models &mdash; Probe-Ably 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Probe-Ably
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Get started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quicktour.html">Quick Start</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="configurations.html">Probing Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inter_metrics.html">Probing Inter Model Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intra_metrics.html">Probing Intra Model Metrics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/grid_factory.html">Grid Model Factory</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Probe-Ably</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Probing Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/advanced/models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="probing-models">
+<h1>Probing Models<a class="headerlink" href="#probing-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="available-models">
+<h2>Available Models<a class="headerlink" href="#available-models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="linear-model">
+<h3>Linear Model<a class="headerlink" href="#linear-model" title="Permalink to this headline">¶</a></h3>
+<p><strong>Model Name</strong>:  probe_ably.core.models.linear.LinearModel</p>
+<span class="target" id="module-probe_ably.core.models.linear"></span><dl class="py class">
+<dt id="probe_ably.core.models.linear.LinearModel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">probe_ably.core.models.linear.</span></code><code class="sig-name descname"><span class="pre">LinearModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/probe_ably/core/models/linear.html#LinearModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.linear.LinearModel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="probe_ably.core.models.linear.LinearModel.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/probe_ably/core/models/linear.html#LinearModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.linear.LinearModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiate the Linear Model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>Dict</em>) – <p>Contains the parameters for initialization. Params data format is</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+    &#39;representation_size&#39;: Dimension of the representation,
+    &#39;dropout&#39;: Dropout of module,
+    &#39;n_classes&#39;: Number of classes for classification,
+    &#39;alpha&#39;: Alpha value to calculate the complexity of the module
+}
+</pre></div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="probe_ably.core.models.linear.LinearModel.forward">
+<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/probe_ably/core/models/linear.html#LinearModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.linear.LinearModel.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>representation</strong> (<em>Tensor</em>) – Representation tensors</p></li>
+<li><p><strong>labels</strong> (<em>Tensor</em>) – Prediciton labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return dictionary of {‘loss’: loss, ‘preds’: preds }</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="probe_ably.core.models.linear.LinearModel.get_complexity">
+<code class="sig-name descname"><span class="pre">get_complexity</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/probe_ably/core/models/linear.html#LinearModel.get_complexity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.linear.LinearModel.get_complexity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Nuclear Norm complexity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns the complexity value of {‘norm’: nuclear norm score of model}</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>Here <code class="code docutils literal notranslate"><span class="pre">representation_size</span></code> and <code class="code docutils literal notranslate"><span class="pre">n_classes</span></code> will be provided during runtime by the trainer initated from the data.
+<code class="code docutils literal notranslate"><span class="pre">dropout</span></code> and <code class="code docutils literal notranslate"><span class="pre">alpha</span></code> values are static value ranges are provided in <strong>config/params/linear.json</strong> file.
+The <code class="code docutils literal notranslate"><span class="pre">probe_ably.core.utils.grid_model_factory</span></code> (See <a class="reference external" href="../utils/grid_factory.html">Grid Model Factory</a>) creates multiple models with the prescribe values for probing.</p>
+<p><strong>config/params/linear.json</strong> is defined as follows:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;probe_ably.core.models.linear.LinearModel&quot;</span><span class="p">:{</span>
+        <span class="nt">&quot;params&quot;</span><span class="p">:[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;float_range&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;options&quot;</span><span class="p">:[</span>
+                <span class="mf">0.0</span><span class="p">,</span>
+                <span class="mf">0.51</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;transform&quot;</span><span class="p">:</span><span class="s2">&quot;2**x&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;float_range&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;options&quot;</span><span class="p">:[</span>
+                <span class="mf">-10.0</span><span class="p">,</span>
+                <span class="mf">3.0</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here the ranges of <code class="code docutils literal notranslate"><span class="pre">__init__</span></code> static params is as follows:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">dropout</span></code> is of float range between 0.0 and 0.51</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">alpha</span></code> is of float range between 2 <sup>-10.0</sup> and 2 <sup>3.0</sup></p></li>
+</ul>
+</div>
+<div class="section" id="multi-layer-perceptron-mlp-model">
+<h3>Multi Layer Perceptron (MLP) Model<a class="headerlink" href="#multi-layer-perceptron-mlp-model" title="Permalink to this headline">¶</a></h3>
+<p><strong>Model Name</strong>:  probe_ably.core.models.linear.LinearModel</p>
+<span class="target" id="module-probe_ably.core.models.mlp"></span><dl class="py class">
+<dt id="probe_ably.core.models.mlp.MLPModel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">probe_ably.core.models.mlp.</span></code><code class="sig-name descname"><span class="pre">MLPModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/probe_ably/core/models/mlp.html#MLPModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.mlp.MLPModel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="probe_ably.core.models.mlp.MLPModel.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/probe_ably/core/models/mlp.html#MLPModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.mlp.MLPModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiate the MLP Model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>Dict</em>) – <p>Contains the parameters for initialization. Params data format is</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+    &#39;representation_size&#39;: Dimension of the representation,
+    &#39;dropout&#39;: Dropout of module,
+    &#39;hidden_size&#39;: Hidden layer size of MLP,
+    &#39;n_layers&#39;: Number of MLP Layers,
+    &#39;n_classes&#39;: Number of classes for classification,
+}
+</pre></div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="probe_ably.core.models.mlp.MLPModel.forward">
+<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/probe_ably/core/models/mlp.html#MLPModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.mlp.MLPModel.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>representation</strong> (<em>Tensor</em>) – Representation tensors</p></li>
+<li><p><strong>labels</strong> (<em>Tensor</em>) – Prediciton labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return dictionary of {‘loss’: loss, ‘preds’: preds }</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="probe_ably.core.models.mlp.MLPModel.get_complexity">
+<code class="sig-name descname"><span class="pre">get_complexity</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/probe_ably/core/models/mlp.html#MLPModel.get_complexity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.mlp.MLPModel.get_complexity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of params complexity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns the complexity value of as {‘n_params’: number of parameters in model}</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>Here <code class="code docutils literal notranslate"><span class="pre">representation_size</span></code> and <code class="code docutils literal notranslate"><span class="pre">n_classes</span></code> will be provided during runtime by the trainer initated from the data.
+<code class="code docutils literal notranslate"><span class="pre">dropout</span></code>, <code class="code docutils literal notranslate"><span class="pre">hidden_size</span></code> and <code class="code docutils literal notranslate"><span class="pre">n_layers</span></code> values are static value ranges are provided in <strong>config/params/mlp.json</strong> file.
+The <code class="code docutils literal notranslate"><span class="pre">probe_ably.core.utils.grid_model_factory</span></code> (See <a class="reference external" href="../utils/grid_factory.html">Grid Model Factory</a>)  creates multiple models with the prescribe values for probing.</p>
+<p><strong>config/params/mlp.json</strong> is defined as follows:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;probe_ably.core.models.mlp.MLPModel&quot;</span><span class="p">:{</span>
+    <span class="nt">&quot;params&quot;</span><span class="p">:[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int_range&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;options&quot;</span><span class="p">:[</span>
+                <span class="mi">32</span><span class="p">,</span>
+                <span class="mi">1024</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;n_layers&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int_range&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;options&quot;</span><span class="p">:[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">10</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;float_range&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;options&quot;</span><span class="p">:[</span>
+                <span class="mf">0.0</span><span class="p">,</span>
+                <span class="mf">0.5</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here the ranges of <code class="code docutils literal notranslate"><span class="pre">__init__</span></code> static params is as follows:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">dropout</span></code> is of float range between 0.0 and 0.5</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">n_layers</span></code> is of int range between 1 and 10</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">hidden_size</span></code> is of int range between 32 and 1024</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="implementing-new-probing-models">
+<h2>Implementing New Probing Models<a class="headerlink" href="#implementing-new-probing-models" title="Permalink to this headline">¶</a></h2>
+<p>If you are to implement a new Probing Model. There are two steps</p>
+<p><strong>Step 1</strong>: Implementing model by extending the abstract Model</p>
+<span class="target" id="module-probe_ably.core.models.abstract_model"></span><dl class="py class">
+<dt id="probe_ably.core.models.abstract_model.AbstractModel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">probe_ably.core.models.abstract_model.</span></code><code class="sig-name descname"><span class="pre">AbstractModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/probe_ably/core/models/abstract_model.html#AbstractModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.abstract_model.AbstractModel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="probe_ably.core.models.abstract_model.AbstractModel.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/probe_ably/core/models/abstract_model.html#AbstractModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.abstract_model.AbstractModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class initialization method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>[</em><em>type</em><em>]</em>) – <p>Contains the parameters for initialization. Params data format is</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+    &#39;representation_size&#39;: Dimension of the representation,
+    &#39;n_layers&#39;: Number of MLP Layers,
+}
+</pre></div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="probe_ably.core.models.abstract_model.AbstractModel.forward">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/probe_ably/core/models/abstract_model.html#AbstractModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.abstract_model.AbstractModel.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class forward method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>representation</strong> (<em>Tensor</em>) – Representation tensors</p></li>
+<li><p><strong>labels</strong> (<em>Tensor</em>) – Prediciton labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return dictionary of {‘loss’: losss, ‘preds’: preds }</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="probe_ably.core.models.abstract_model.AbstractModel.get_complexity">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">get_complexity</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/probe_ably/core/models/abstract_model.html#AbstractModel.get_complexity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#probe_ably.core.models.abstract_model.AbstractModel.get_complexity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the complexity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns dictionary of {“complexity_measure1”: value1, “complexity_measure2”: value2}</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[str,float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>Here <code class="code docutils literal notranslate"><span class="pre">representation_size</span></code> and <code class="code docutils literal notranslate"><span class="pre">n_classes</span></code> will be provided during runtime by the trainer initated from the data.</p>
+<p><strong>Step 2</strong>: Create JSON configuration file with the ranges to create models. Refer to <strong>config/params/mlp.json</strong> and <strong>config/params/linear.json</strong> for example.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Julia Rozanova, Deborah Ferreira, Marco Valentino, Mokanarangan Thayaparan and Andre Freitas.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
