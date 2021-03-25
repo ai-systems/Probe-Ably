@@ -6,7 +6,7 @@
 ![made-with-react](https://badges.aleen42.com/src/react.svg)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-_Probe-Ably_ is a framework designed to support researchers in the implementation of probes for neural representations in a flexible and extensible way.
+_Probe-Ably_ is a framework designed for PyTorch to support researchers in the implementation of probes for neural representations in a flexible and extensible way.
 
 The core facility provided by _Probe-Ably_ is the encapsulation of the end-to-end experimental probing pipeline. Specifically, _Probe-Ably_ provides a complete implementation of the core tasks necessary for probing neural representations, starting from the configuration and training of heterogeneous probe models, to the calculation and visualization of metrics for the evaluation.
 
