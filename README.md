@@ -18,5 +18,3 @@ This architectural design allows the user to:
 - Customize, implement and adopt novel evaluation metrics for the experiments.
 
 Further information can be found in the [Docmentation](https://ai-systems.github.io/Probe-Ably/).
-
-### Contributors
