@@ -1,19 +1,29 @@
 from typing import Dict
+
 import numpy as np
 import torch
-from torch import Tensor, nn
 from probe_ably.core.models import AbstractModel
-import math
+from torch import Tensor, nn
 
 
 class LinearModel(AbstractModel):
-    def __init__(
-        self, params: Dict
-    ):  # representation_size=768, n_classes=3, dropout=0.1, alpha=0.0
-        super().__init__()
-        self.representation_size = params["representation_size"]
+    def __init__(self, params: Dict):
+        """Initiate the Linear Model
+
+        Args:
+            params (Dict): Contains the parameters for initialization. Params data format is
+
+                .. code-block:: json
+
+                    {
+                        'representation_size': Dimension of the representation,
+                        'dropout': Dropout of module,
+                        'n_classes': Number of classes for classification,
+                        'alpha': Alpha value to calculate the complexity of the module
+                    }
+        """
+        super(params).__init__()
         self.dropout_p = params["dropout"]
-        self.n_classes = params["n_classes"]
         self.alpha = params["alpha"]
 
         self.linear = nn.Linear(self.representation_size, self.n_classes)
@@ -21,9 +31,9 @@ class LinearModel(AbstractModel):
         self.criterion = nn.CrossEntropyLoss()
 
     def forward(
-        self, representation: Tensor, labels: Tensor, eps=1e-5, **kwargs
+        self, representation: Tensor, labels: Tensor, **kwargs
     ) -> Dict[str, Tensor]:
-        """forward method
+        """Forward method
 
         Args:
             representation (Tensor): Representation tensors
@@ -45,14 +55,14 @@ class LinearModel(AbstractModel):
         return {"loss": loss, "preds": preds}
 
     def get_complexity(self, **kwargs) -> Dict[str, float]:
-        """Computes the complexity
+        """Computes the Nuclear Norm complexity
 
         Returns:
-            float: Returns the complexity value
+            Dict[str, float]: Returns the complexity value of {'norm': nuclear norm score of model}
         """
         return {"norm": float(self.get_norm().item())}
 
-    def get_norm(self):
+    def get_norm(self) -> Tensor:
         ext_matrix = torch.cat(
             [self.linear.weight, self.linear.bias.unsqueeze(-1)], dim=1
         )

@@ -1,22 +1,36 @@
 from typing import Dict
+
 import numpy as np
 import torch
-from torch import Tensor, nn
 from probe_ably.core.models import AbstractModel
+from torch import Tensor, nn
 
 
 class MLPModel(AbstractModel):
     def __init__(
         self, params: Dict
     ):  # representation_size=768, n_classes=3, hidden_size=5, n_layers=1, dropout=0.1
-        super().__init__()
-        self.representation_size = params["representation_size"]
+        """Initiate the MLP Model
+
+        Args:
+            params (Dict): Contains the parameters for initialization. Params data format is
+
+                .. code-block:: json
+
+                    {
+                        'representation_size': Dimension of the representation,
+                        'dropout': Dropout of module,
+                        'hidden_size': Hidden layer size of MLP,
+                        'n_layers': Number of MLP Layers,
+                        'n_classes': Number of classes for classification,
+                    }
+        """
+        super(params).__init__()
         self.n_layers = params["n_layers"]
         self.hidden_size = params["hidden_size"]
         if self.hidden_size < 2 ** self.n_layers:
             self.hidden_size = 2 ** self.n_layers
         self.dropout_p = params["dropout"]
-        self.n_classes = params["n_classes"]
 
         self.mlp = self.build_mlp()
         self.linear = nn.Linear(self.final_hidden_size, self.n_classes)
@@ -26,7 +40,7 @@ class MLPModel(AbstractModel):
     def forward(
         self, representation: Tensor, labels: Tensor, **kwargs
     ) -> Dict[str, Tensor]:
-        """forward method
+        """Forward method
 
         Args:
             representation (Tensor): Representation tensors
@@ -43,10 +57,10 @@ class MLPModel(AbstractModel):
         return {"loss": loss, "preds": preds}
 
     def get_complexity(self, **kwargs) -> Dict[str, float]:
-        """Computes the complexity
+        """Computes the number of params complexity
 
         Returns:
-            float: Returns the complexity value
+            float: Returns the complexity value of as {'n_params': number of parameters in model}
         """
         return {"nparams": self.get_n_params()}
 

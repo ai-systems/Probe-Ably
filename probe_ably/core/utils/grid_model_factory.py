@@ -1,12 +1,12 @@
+import glob
+import importlib
+import json
+import os
+import random
 from typing import Any, Dict, List
 
-from probe_ably.core.models import AbstractModel
-import importlib
 import numpy as np
-import random
-import os
-import glob
-import json
+from probe_ably.core.models import AbstractModel
 
 
 class GridModelFactory:
@@ -14,7 +14,16 @@ class GridModelFactory:
     def create_models(
         model_class: str, num_models: int = 50, param_args: Dict = {}
     ) -> List[AbstractModel]:
+        """Creates a list of models provided from static param ranges
 
+        Args:
+            model_class (str): Probing model class. For example: :code:`probe_ably.core.models.linear`
+            num_models (int, optional): Number of Models to create. Defaults to 50.
+            param_args (Dict, optional): Paramter ranges to choose from the model to create. Defaults to {}.
+
+        Returns:
+            List[AbstractModel]: Creates a Grid with the prescribed parameter ranges and returns list of models with size num_models by random initialization
+        """
         paths = glob.glob("./config/params/*.json")
 
         params = None
@@ -77,13 +86,15 @@ class GridModelFactory:
         return models
 
 
-def choose_params(params: List[Dict]):
+def _choose_params(params: List[Dict]):
+    ""
     names = [param["name"] for param in params]
-    values = [choose_one_param_value(param) for param in params]
+    values = [_choose_one_param_value(param) for param in params]
     return dict(zip(names, values))
 
 
-def choose_one_param_value(param):
+def _choose_one_param_value(param):
+    ""
     if param["type"] == "float_range":
         value = random.uniform(float(param["options"][0]), float(param["options"][1]))
     elif param["type"] == "int_range":
