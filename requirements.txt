@@ -10,3 +10,4 @@ numpy
 click
 torch
 colorama
+jsonschema
