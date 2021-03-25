@@ -26,3 +26,7 @@ Run the following additional command
 ```
 pip install -r requirements-dev.txt
 ```
+
+## Using Docker Image
+
+You will additionally need to install NVIDIA-Docker (https://github.com/NVIDIA/nvidia-docker)

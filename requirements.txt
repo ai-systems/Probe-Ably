@@ -1,3 +1,4 @@
+tqdm
 dynaconf[all]
 prefect
 loguru
