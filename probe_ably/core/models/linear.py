@@ -1,5 +1,6 @@
+### ADAPTED FROM https://github.com/rycolab/pareto-probing/blob/master/src/h02_learn/model/linear.py
 from typing import Dict
-
+import math
 import numpy as np
 import torch
 from probe_ably.core.models import AbstractModel
@@ -22,7 +23,7 @@ class LinearModel(AbstractModel):
                         'alpha': Alpha value to calculate the complexity of the module
                     }
         """
-        super(params).__init__()
+        super().__init__(params)
         self.dropout_p = params["dropout"]
         self.alpha = params["alpha"]
 
@@ -31,7 +32,7 @@ class LinearModel(AbstractModel):
         self.criterion = nn.CrossEntropyLoss()
 
     def forward(
-        self, representation: Tensor, labels: Tensor, **kwargs
+        self, representation: Tensor, labels: Tensor, eps=1e-5, **kwargs
     ) -> Dict[str, Tensor]:
         """Forward method
 

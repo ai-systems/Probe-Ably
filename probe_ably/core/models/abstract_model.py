@@ -33,6 +33,7 @@ class AbstractModel(Module, ABC):
                         'n_layers': Number of MLP Layers,
                     }
         """
+        super().__init__()
         self.representation_size = params["representation_size"]
         self.n_classes = params["n_classes"]
 

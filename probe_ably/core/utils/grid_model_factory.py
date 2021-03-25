@@ -61,9 +61,9 @@ class GridModelFactory:
                     )
 
             elif param["type"] == "int_range":
-                generated_params[param["name"]] = random.sample(
+                generated_params[param["name"]] = random.choices(
                     range(int(param["options"][0]), int(param["options"][1])),
-                    num_models,
+                    k=num_models,
                 )
 
             elif param["type"] == "categorical":
@@ -73,10 +73,8 @@ class GridModelFactory:
         for i in range(num_models):
             chosen_params_dict[i] = dict()
             for key_name, values in generated_params.items():
-
                 chosen_params_dict[i][key_name] = values[i]
 
-        print(chosen_params_dict)
         models = []
         for i in range(num_models):
             # chosen_params = choose_params(params)
