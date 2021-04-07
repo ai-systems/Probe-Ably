@@ -15,10 +15,7 @@ train_probing_task = TrainProbingTask()
 process_metric_task = ProcessMetricTask()
 visualization_task = VisualiaztionTask()
 
-
-@click.command()
-@click.option("--config_file", help="Probing Configuration File")
-def run_probing(config_file):
+def run_probing(config_file=INPUT_FILE):
     with Flow("Running Probe") as flow1:
         parsed_input = read_input_task(config_file)
         prepared_data = prepare_data_probing(
@@ -28,9 +25,6 @@ def run_probing(config_file):
         processed_results = process_metric_task(
             train_results, parsed_input["probing_setup"]
         )
-        visualization_task(processed_results)
     FlowRunner(flow=flow1).run()
 
-
-if __name__ == "__main__":
-    run_probing()
+    return flow1.result

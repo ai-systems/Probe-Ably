@@ -36,6 +36,7 @@ export default () => {
           <Row className="justify-content-md-center">
             <Col lg={12} className="mb-4 d-none d-sm-block">
               <Container>
+		<div>"Hello World!"</div>
                 <Spinner
                   animation="border"
                   role="status"

@@ -8,7 +8,6 @@ this_filepath = Path(os.path.abspath(__file__))
 this_dirpath = this_filepath.parent.parent
 import json
 
-
 class WebServer:
     def __init__(self, processed_data):
         self.app = Flask(
