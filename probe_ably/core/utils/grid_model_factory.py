@@ -4,7 +4,7 @@ import json
 import os
 import random
 from typing import Any, Dict, List
-
+import sys
 import numpy as np
 from probe_ably.core.models import AbstractModel
 
@@ -34,46 +34,35 @@ class GridModelFactory:
                     params = maybe_params[model_class]["params"]
                     break
         if not params:
-            raise FileNotFoundError("No parameters specified, dear.")
+            raise FileNotFoundError("No parameters specified.")
 
         ModelClass = AbstractModel.subclasses[model_class]
 
         generated_params = dict()
-        i = 0
         for param in params:
-
-            if param["type"] == "float_range":
-                if param["name"] == "alpha":
-                    generated_params[param["name"]] = np.array(
-                        [0]
-                        + [
-                            2 ** x
-                            for x in np.linspace(
-                                start=-10, stop=3, num=(num_models - 1)
-                            )
-                        ]
-                    )
-                else:
-                    generated_params[param["name"]] = np.random.uniform(
-                        low=float(param["options"][0]),
-                        high=float(param["options"][1]),
-                        size=(num_models,),
-                    )
-
+            if param["type"] == "function":
+                p, m = param["function_location"].rsplit(".", 1)
+                module_path = importlib.import_module(p)
+                generator_function = getattr(module_path, m)
+                generated_params[param["name"]] = generator_function(
+                    num_models=num_models, **param
+                )
+            elif param["type"] == "float_range":
+                generated_params[param["name"]] = np.random.uniform(
+                    low=float(param["options"][0]),
+                    high=float(param["options"][1]),
+                    size=(num_models,),
+                )
             elif param["type"] == "int_range":
-                if param["name"] == "hidden_size":
-                    generated_params[param["name"]] = random.choices(
-                        list({int(2 ** x) for x in np.arange(5, 10, 0.01)}),
-                        k=num_models,
-                    )
-                else:
-                    generated_params[param["name"]] = random.choices(
-                        range(int(param["options"][0]), int(param["options"][1])),
-                        k=num_models,
-                    )
+                generated_params[param["name"]] = random.choices(
+                    range(int(param["options"][0]), int(param["options"][1])),
+                    k=num_models,
+                )
 
             elif param["type"] == "categorical":
-                value = np.random_choice(param["options"])
+                generated_params[param["name"]] = random.choices(
+                    param["options"], k=num_models
+                )
 
         chosen_params_dict = dict()
         for i in range(num_models):
@@ -83,35 +72,34 @@ class GridModelFactory:
 
         models = []
         for i in range(num_models):
-            # chosen_params = choose_params(params)
             model = ModelClass({**chosen_params_dict[i], **param_args})
             models.append(model)
 
         return models
 
 
-def _choose_params(params: List[Dict]):
-    ""
-    names = [param["name"] for param in params]
-    values = [_choose_one_param_value(param) for param in params]
-    return dict(zip(names, values))
+# def _choose_params(params: List[Dict]):
+#     ""
+#     names = [param["name"] for param in params]
+#     values = [_choose_one_param_value(param) for param in params]
+#     return dict(zip(names, values))
 
 
-def _choose_one_param_value(param):
-    ""
-    if param["type"] == "float_range":
-        value = random.uniform(float(param["options"][0]), float(param["options"][1]))
-    elif param["type"] == "int_range":
-        value = random.randint(int(param["options"][0]), int(param["options"][1]))
-    elif param["type"] == "categorical":
-        value = np.random_choice(param["options"])
-    else:
-        raise ValueError(f"Invalid or no value options for parameter {params['name']}")
+# def _choose_one_param_value(param):
+#     ""
+#     if param["type"] == "float_range":
+#         value = random.uniform(float(param["options"][0]), float(param["options"][1]))
+#     elif param["type"] == "int_range":
+#         value = random.randint(int(param["options"][0]), int(param["options"][1]))
+#     elif param["type"] == "categorical":
+#         value = np.random_choice(param["options"])
+#     else:
+#         raise ValueError(f"Invalid or no value options for parameter {params['name']}")
 
-    try:
-        if param["transform"] == "2**x":
-            value = 2 ** (value)
-    except KeyError:
-        pass
+#     try:
+#         if param["transform"] == "2**x":
+#             value = 2 ** (value)
+#     except KeyError:
+#         pass
 
-    return value
+#     return value

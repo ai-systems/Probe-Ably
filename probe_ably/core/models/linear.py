@@ -61,7 +61,9 @@ class LinearModel(AbstractModel):
         Returns:
             Dict[str, float]: Returns the complexity value of {'norm': nuclear norm score of model}
         """
-        return {"norm": float(self.get_norm().item())}
+        return {
+            "norm": float(self.get_norm().item()),
+        }
 
     def get_norm(self) -> Tensor:
         ext_matrix = torch.cat(

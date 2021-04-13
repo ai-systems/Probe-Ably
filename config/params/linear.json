@@ -8,9 +8,9 @@
 		      },
 		        {
 				"name": "alpha",
-				"transform": "2**x",
-				"type": "float_range",
-				"options": [-10.0, 3.0]
+				"type": "function",
+				"function_location": "probe_ably.core.utils.param_functions.nuclear_norm_alpha_generation",
+				"options": [-10.0, 3]
 		      }]
 	}
 }

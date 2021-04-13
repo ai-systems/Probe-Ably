@@ -30,8 +30,8 @@ class MLPModel(AbstractModel):
         super().__init__(params)
         self.n_layers = params["n_layers"]
         self.hidden_size = params["hidden_size"]
-        if self.hidden_size < 2 ** self.n_layers:
-            self.hidden_size = 2 ** self.n_layers
+        # if self.hidden_size < 2 ** self.n_layers:
+        #     self.hidden_size = 2 ** self.n_layers
         self.dropout_p = params["dropout"]
 
         self.mlp = self.build_mlp()
@@ -64,7 +64,7 @@ class MLPModel(AbstractModel):
         Returns:
             float: Returns the complexity value of as {'n_params': number of parameters in model}
         """
-        return {"nparams": self.get_n_params()}
+        return {"hidden_size": float(self.hidden_size), "nparams": self.get_n_params()}
 
     def build_mlp(self):
         if self.n_layers == 0:
@@ -82,11 +82,13 @@ class MLPModel(AbstractModel):
         return nn.Sequential(*mlp)
 
     def get_n_params(self):
-        pp = 0
+        return sum(p.numel() for p in self.parameters())
 
-        for p in list(self.parameters()):
-            nn = 1
-            for s in list(p.size()):
-                nn = nn * s
-            pp += nn
-        return pp
+        # pp = 0
+
+        # for p in list(self.parameters()):
+        #     nn = 1
+        #     for s in list(p.size()):
+        #         nn = nn * s
+        #     pp += nn
+        # return pp

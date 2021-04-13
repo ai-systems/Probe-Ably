@@ -234,6 +234,7 @@ class TrainProbingTask(Task):
                                 "preds": preds_control,
                             },
                         }
+
                         run_number += 1
         return output_results
 
@@ -293,7 +294,7 @@ class TrainProbingTask(Task):
                     loss_scalar = (tr_loss - logging_loss) / self.logging_steps
 
                     # epoch_iterator.set_description(f"Loss :{loss_scalar}")
-
+                    # logger.info(f"LOSS SCALAR {loss_scalar}")
                     logging_loss = tr_loss
 
             score, _ = self.eval(
@@ -306,10 +307,13 @@ class TrainProbingTask(Task):
 
             with torch.no_grad():
                 if score > best_score:
-                    # logger.success(f"Saving new model with best score: {score}")
+                    # logger.success(
+                    #     f"Epoch: {epochs_trained} - Saving new model with best score: {score}"
+                    # )
                     best_model = model
                     best_score = score
-
+            epochs_trained += 1
+        # logger.info("Done")
         return best_model
 
     def eval(self, model, dataloader, device, n_gpu, eval_fn):
