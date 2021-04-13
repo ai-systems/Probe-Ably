@@ -27,6 +27,11 @@ This architectural design allows the user to:
 - Extend the suite of probes with new models without the need to change the core probing pipeline;
 - Customize, implement and adopt novel evaluation metrics for the experiments.
 
+Demo
+^^^^
+.. youtube:: https://www.youtube.com/watch?v=lE3O_BENBxk
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Get started

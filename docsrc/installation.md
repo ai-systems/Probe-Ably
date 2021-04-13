@@ -29,7 +29,7 @@ pip install -r requirements-dev.txt
 
 ## Using Docker Image
 
-If you want GPU support you will need to install NVIDIA Container Toolkit from: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html and Docker >= _19.03_
+If you want GPU support you will need to install NVIDIA Container Toolkit from: <https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html> and Docker >= _19.03_
 
 ```
 docker run --gpus all -v $(pwd):/app/Probe-Ably/configurations -p 8031:8031 -it aisystems/probe-ably bash
