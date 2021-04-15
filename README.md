@@ -24,3 +24,15 @@ This architectural design allows the user to:
 - Customize, implement and adopt novel evaluation metrics for the experiments.
 
 Further information can be found in the [Documentation](https://ai-systems.github.io/Probe-Ably/).
+
+**To Cite Us**
+```
+@misc{ferreira2021does,
+      title={Does My Representation Capture X? Probe-Ably}, 
+      author={Deborah Ferreira and Julia Rozanova and Mokanarangan Thayaparan and Marco Valentino and André Freitas},
+      year={2021},
+      eprint={2104.05807},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
