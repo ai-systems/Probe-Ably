@@ -12,7 +12,6 @@ from tqdm import tqdm
 
 
 class ProcessMetricTask(Task):
-    @overrides
     def run(
         self, train_results: Dict[str, Dict], probing_configuration: Dict[str, Dict]
     ):

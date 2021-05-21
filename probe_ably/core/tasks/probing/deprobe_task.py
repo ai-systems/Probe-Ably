@@ -1,5 +1,5 @@
 import random
-from typing import Dict
+from typing import Dict, List
 from copy import copy, deepcopy
 import numpy as np
 import torch
@@ -13,6 +13,7 @@ from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 from tqdm import tqdm, trange
 from colorama import Fore
+import threading
 
 
 class TrainProbingTask(Task):
@@ -81,7 +82,7 @@ class TrainProbingTask(Task):
 
         return preds_test
 
-    def run(self, tasks: Dict, probing_setup: Dict) -> Dict:
+    def run(self, tasks: Dict, probing_setup: Dict, thread: threading.Thread) -> Dict:
         """Runs the Probing models
 
         :param tasks: Data content of the models for probing.
@@ -130,27 +131,28 @@ class TrainProbingTask(Task):
         ]
         intra_metric_object = intra_metric_class()
 
-        task_loop_bar = tqdm(
+        thread.task_loop_bar = tqdm(
             tasks.items(),
             desc=f"Task progress",
             bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.GREEN, Fore.RESET),
         )
-        for id_task, content_tasks in task_loop_bar:
 
-            task_loop_bar.set_description(
+        for id_task, content_tasks in thread.task_loop_bar:
+
+            thread.task_loop_bar.set_description(
                 f"Task: {content_tasks['task_name']} progress"
             )
             output_results[id_task] = dict()
             output_results[id_task]["models"] = dict()
             output_results[id_task]["task_name"] = content_tasks["task_name"]
-            model_loop_bar = tqdm(
+            thread.model_loop_bar = tqdm(
                 content_tasks["models"].items(),
                 desc=f"Model progress",
                 bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET),
                 leave=False,
             )
-            for id_model, model_content in model_loop_bar:
-                model_loop_bar.set_description(
+            for id_model, model_content in thread.model_loop_bar:
+                thread.model_loop_bar.set_description(
                     f"Model: {model_content['model_name']} progress"
                 )
                 output_results[id_task]["models"][id_model] = dict()
@@ -162,7 +164,6 @@ class TrainProbingTask(Task):
                     "representation_size": model_content["representation_size"],
                     "n_classes": model_content["number_of_classes"],
                 }
-                print(model_params)
 
                 for id_prob_model, probe_content in probing_setup[
                     "probing_models"
@@ -181,15 +182,15 @@ class TrainProbingTask(Task):
                     run_number = 0
                     train_batch_size = probe_content["batch_size"] * max(1, n_gpu)
 
-                    probes_loop_bar = tqdm(
+                    thread.probes_loop_bar = tqdm(
                         probing_models,
                         desc="Probe Progress",
                         leave=False,
                         bar_format="{l_bar}%s{bar}%s{r_bar}"
                         % (Fore.YELLOW, Fore.RESET),
                     )
-                    for probe in probes_loop_bar:
-                        probes_loop_bar.set_description(
+                    for probe in thread.probes_loop_bar:
+                        thread.probes_loop_bar.set_description(
                             f"Probe: {probe_model_name} progress"
                         )
                         probe_for_model = deepcopy(probe)
@@ -234,7 +235,6 @@ class TrainProbingTask(Task):
                                 "preds": preds_control,
                             },
                         }
-
                         run_number += 1
         return output_results
 
@@ -294,7 +294,7 @@ class TrainProbingTask(Task):
                     loss_scalar = (tr_loss - logging_loss) / self.logging_steps
 
                     # epoch_iterator.set_description(f"Loss :{loss_scalar}")
-                    # logger.info(f"LOSS SCALAR {loss_scalar}")
+
                     logging_loss = tr_loss
 
             score, _ = self.eval(
@@ -307,13 +307,10 @@ class TrainProbingTask(Task):
 
             with torch.no_grad():
                 if score > best_score:
-                    # logger.success(
-                    #     f"Epoch: {epochs_trained} - Saving new model with best score: {score}"
-                    # )
+                    # logger.success(f"Saving new model with best score: {score}")
                     best_model = model
                     best_score = score
-            epochs_trained += 1
-        # logger.info("Done")
+
         return best_model
 
     def eval(self, model, dataloader, device, n_gpu, eval_fn):
@@ -353,3 +350,4 @@ class TrainProbingTask(Task):
         # logger.info(f"Score:{score}")
 
         return score, preds
+

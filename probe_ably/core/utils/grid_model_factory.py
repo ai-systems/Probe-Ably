@@ -6,7 +6,7 @@ import random
 from typing import Any, Dict, List
 import sys
 import numpy as np
-from probe_ably.core.models import AbstractModel
+from probe_ably.core.models import AbstractModel, ModelParams
 
 
 class GridModelFactory:
@@ -24,19 +24,9 @@ class GridModelFactory:
         Returns:
             List[AbstractModel]: Creates a Grid with the prescribed parameter ranges and returns list of models with size num_models by random initialization
         """
-        paths = glob.glob("./config/params/*.json")
-
-        params = None
-        for path in paths:
-            with open(path, "r") as f:
-                maybe_params = json.load(f)
-                if model_class in maybe_params:
-                    params = maybe_params[model_class]["params"]
-                    break
-        if not params:
-            raise FileNotFoundError("No parameters specified.")
 
         ModelClass = AbstractModel.subclasses[model_class]
+        params = ModelParams().default_params[model_class]["params"]
 
         generated_params = dict()
         for param in params:

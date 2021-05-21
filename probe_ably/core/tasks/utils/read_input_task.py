@@ -16,7 +16,6 @@ from probe_ably.core.metrics import AbstractInterModelMetric, AbstractIntraModel
 
 SCHEMA_TEMPLATE_FILE = settings["input_json_schema"]
 
-
 class ModelRepresentationFileNotFound(Exception):
     def __init__(self, model_location):
         self.model_location = model_location
@@ -35,7 +34,6 @@ class InputClassNotFound(Exception):
 
 
 class ReadInputTask(Task):
-    @overrides
     def run(self, input_file_location: str) -> Dict:
         """Function that parses the input configuration file provided by the user.
 
