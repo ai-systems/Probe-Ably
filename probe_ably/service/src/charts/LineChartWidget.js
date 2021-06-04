@@ -1,15 +1,16 @@
-import { ResponsiveScatterPlot } from "@nivo/scatterplot";
+import { ResponsiveLine } from '@nivo/line';
 import {
   Button,
   ButtonGroup,
   Card,
   Col,
-  Row,
+  Row
 } from "@themesberg/react-bootstrap";
 import { jsPDF } from "jspdf";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import "svg2pdf.js";
+
 
 export default (props) => {
   const { title, probing_data, task_name } = props;
@@ -61,8 +62,8 @@ export default (props) => {
                       style={{ height: 400 }}
                       className="ct-series-g ct-major-tent"
                     >
-                      <ResponsiveScatterPlot
-                        colors={{ scheme: "accent" }}
+                      <ResponsiveLine
+                        colors={{ scheme: "category10" }}
                         data={p_data.chart_data}
                         margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
                         xScale={{ type: "linear", min: "auto", max: "auto" }}
@@ -83,7 +84,8 @@ export default (props) => {
                           tickRotation: 90,
                           legend: p_data.x_axis,
                           legendPosition: "middle",
-                          format: (value) => value.toExponential(2),
+                          // format: (value) => value,
+                          format: (value) => value < 0.001 || value > 10000 ? value.toExponential(2) : value,
                           legendOffset: 60,
                         }}
                         axisLeft={{
