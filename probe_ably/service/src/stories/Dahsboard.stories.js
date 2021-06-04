@@ -4,6 +4,7 @@ import React from "react";
 import "react-datetime/css/react-datetime.css";
 import Dashboard from "../pages/dashboard/DashboardOverview";
 import "../scss/volt.scss";
+import sampledata from './sample.json';
 
 export default {
   title: "Dashboard",
@@ -306,3 +307,10 @@ MultipleTask.args = {
     },
   ],
 };
+
+
+
+export const TaskFromJSON = Template.bind({});
+
+
+TaskFromJSON.args = sampledata
