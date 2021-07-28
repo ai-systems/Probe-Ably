@@ -3,7 +3,6 @@ dynaconf[all]
 prefect
 loguru
 ujson
-overrides
 sklearn
 pandas
 numpy
