@@ -16,7 +16,6 @@ class GenerateControlTask(Task):
 
         return random_labels
 
-    @overrides
     def run(self, input_data, input_labels):
 
         unique_labels = self.get_unique_labels(input_labels)

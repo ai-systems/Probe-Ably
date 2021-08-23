@@ -73,8 +73,8 @@ class LinearModel(AbstractModel):
         return penalty
 
 
-#    def get_rank(self):
-#        ext_matrix = torch.cat([self.linear.weight, self.linear.bias.unsqueeze(-1)], dim=1)
-#        _, svd_matrix, _ = np.linalg.svd(ext_matrix.cpu().numpy())
-#        rank = np.sum(svd_matrix > 1e-3)
-#        return rank
+    def get_rank(self):
+        ext_matrix = torch.cat([self.linear.weight, self.linear.bias.unsqueeze(-1)], dim=1)
+        _, svd_matrix, _ = np.linalg.svd(ext_matrix.cpu().numpy())
+        rank = np.sum(svd_matrix > 1e-3)
+        return rank

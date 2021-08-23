@@ -8,7 +8,6 @@ import torch
 from torch.utils.data import Dataset
 import numpy as np
 
-
 class PrepareDataForProbingTask(Task):
     @staticmethod
     def prepare_entries(vectors, labels):
@@ -34,7 +33,6 @@ class PrepareDataForProbingTask(Task):
 
         return X_train, X_val, X_test, y_train, y_val, y_test
 
-    @overrides
     def run(self, tasks_data: Dict, experiment_setup: Dict) -> Dict:
         """Reads the task_data and experiment_setup, splits into train/dev/test and
         creates a TorchDataset for each.
@@ -94,9 +92,7 @@ class PrepareDataForProbingTask(Task):
                     model_labels_train,
                     model_labels_val,
                     model_labels_test,
-                ) = self.train_val_test_split(
-                    X=model_content["model_vectors"],
-                    y=model_content["model_labels"],
+                ) = self.train_val_test_split( X=model_content["model_vectors"], y=model_content["model_labels"],
                     train_size=experiment_setup["train_size"],
                     val_size=experiment_setup["dev_size"],
                     test_size=experiment_setup["test_size"],
