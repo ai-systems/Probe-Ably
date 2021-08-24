@@ -12,3 +12,6 @@ colorama
 jsonschema
 flask
 flask-cors
+aiofiles
+fastapi
+python-multipart

@@ -33,60 +33,71 @@ class InputClassNotFound(Exception):
         self.class_name = class_name
 
 
-class ReadInputTask(Task):
-    def run(self, input_file_location: str) -> Dict:
-        """Function that parses the input configuration file provided by the user.
+def load_input(input_file_location):
+    """Function that parses the input configuration file provided by the user.
 
-        :param input_file_location: Input json file containing the representations for probing and probing setup.
-         The file should follow the template in settings["input_json_schema"]
-        :type input_file_location: str
-        :return: Dictionary of the parsed input, in the following format:
-        {
-            "tasks": {
-               int (task_id):
-               {
-                   "task_name": str,
-                   "models": {
-                       int (model_id): {
-                           "model_name": str,
-                           "model_vectors": array (representations being probed),
-                           "model_labels": array (labels for the auxiliary task),
-                           "control_labels": array (labels for the control task),
-                           "representation_size": int (size of each representation),
-                           "number_of_classes": int (number of unique labels),
-                           "default_control": boolean (False if user inputs control task)
-                       }
-                   }
-               }
-           }
-
-           "probing_setup": {
-               "inter_metric": string (class for metric to compare model and control task),
-               "intra_metric": string (class for metric that will be used for measuring
-                the best model),
-               "dev_size": int,
-               "train_size": int,
-               "test_size": int,
-               "probing_models": {
-                   int (probing_models_id): {
-                       "probing_model_name": string (class for the probing model),
-                       "batch_size": int,
-                       "epochs": int,
-                       "number_of_models": int (number of probe models for generation)
-                   }
-               }
-           }
+    :param input_file_location: Input json file containing the representations for probing and probing setup.
+        The file should follow the template in settings["input_json_schema"]
+    :type input_file_location: str
+    :return: Dictionary of the parsed input, in the following format:
+    {
+        "tasks": {
+            int (task_id):
+            {
+                "task_name": str,
+                "models": {
+                    int (model_id): {
+                        "model_name": str,
+                        "model_vectors": array (representations being probed),
+                        "model_labels": array (labels for the auxiliary task),
+                        "control_labels": array (labels for the control task),
+                        "representation_size": int (size of each representation),
+                        "number_of_classes": int (number of unique labels),
+                        "default_control": boolean (False if user inputs control task)
+                    }
+                }
+            }
         }
-        :rtype: Dict
-        """
+
+        "probing_setup": {
+            "inter_metric": string (class for metric to compare model and control task),
+            "intra_metric": string (class for metric that will be used for measuring
+            the best model),
+            "dev_size": int,
+            "train_size": int,
+            "test_size": int,
+            "probing_models": {
+                int (probing_models_id): {
+                    "probing_model_name": string (class for the probing model),
+                    "batch_size": int,
+                    "epochs": int,
+                    "number_of_models": int (number of probe models for generation)
+                }
+            }
+        }
+    }
+    :rtype: Dict
+    """
+    with open(input_file_location, "r") as f:
+        input_data = json.load(f)
+        logger.debug(f"Opening file located in {input_file_location}")
+
+    return input_data
+
+class ReadInputTask(Task):
+    async def run(self, input_file) -> Dict:
 
         generate_control_task = GenerateControlTask()
         logger.debug("Reading input file.")
-        try:
-            with open(input_file_location, "r") as f:
-                input_data = json.load(f)
-                logger.debug(f"Opening file located in {input_file_location}")
 
+        try:
+            input_data = load_input(input_file)
+        except TypeError:
+            # UploadFile handling
+            input_data = await input_file.read()
+            input_data = json.loads(input_data)
+
+        try:
             with open(SCHEMA_TEMPLATE_FILE, "r") as f:
                 input_template = json.load(f)
             jsonschema.validate(instance=input_data, schema=input_template)
@@ -121,15 +132,15 @@ class ReadInputTask(Task):
             probing_setup = self.parse_probing_setup(input_data)
 
         except FileNotFoundError:
-            sys.exit(f"Input file not found: {input_file_location}")
+            sys.exit(f"Input file not found: {input_file}")
         except json.JSONDecodeError as e:
             sys.exit(
-                f"Input file is not a properly foramtted json file: {input_file_location}"
+                f"Input file is not a properly foramtted json file: {input_file}"
             )
         except jsonschema.ValidationError as e:
             logger.error(e)
             sys.exit(
-                f"Input file ({input_file_location}) does not follow correct template. Please refer to README file."
+                f"Input file ({input_file}) does not follow correct template. Please refer to README file."
             )
         except ModelRepresentationFileNotFound as e:
             sys.exit(f"Representation file ({e.model_location}) not found.")
