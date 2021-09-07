@@ -6,7 +6,8 @@ import {
   Spinner,
   Card,
 } from "@themesberg/react-bootstrap";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState, useCallback } from "react";
 import Dashboard from "./dashboard/DashboardOverview";
 import ProbeControl from "./forms/ProbeControl";
 import Report from "./dashboard/Report.js"
@@ -14,24 +15,40 @@ import Report from "./dashboard/Report.js"
 export default () => {
   const [config, setConfig] = useState(null);
   const [isProbing, setIsProbing] = useState(false); 
-  const [results, setResults] = useState(null)
-  
-  const startProbing = () => {
-    var files = document.getElementById("config_file").files
-    var formData = new FormData();
-    formData.append('config_file', files[0])
-    fetch("/start_probing", {method: "POST", body: formData})
-    .then(setIsProbing(true))
-  }
+  const [results, setResults] = useState(null);
+	const [taskProgress, setTaskProgress] = useState(0);
+	const [modelProgress, setModelProgress] = useState(0);
+	const [probesProgress, setProbesProgress] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch("/results")
-      .then((res) => res.json())
-      .then((data)=> {setResults(data.aux_tasks)})
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [results]);
+    // make wrapper function to give child
+  const wrapperSetModelProgress = useCallback(val => {
+    setModelProgress(val);
+  }, [setModelProgress]);
+  const wrapperSetProbesProgress = useCallback(val => {
+    setProbesProgress(val);
+  }, [setProbesProgress]);
+
+const startProbing = async () => {
+    var files = document.getElementById("config_file").files;
+    var formData = new FormData();
+    formData.append('config_file', files[0]);
+    setIsProbing(true);
+
+    const response = await fetch("/start_probing", {method: "POST", body: formData});
+    const data = await response.json();
+    setResults(data);
+    /// catch errors?
+}
+  console.log(results)
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     fetch("/results")
+  //     .then((res) => res.json())
+  //     .then((data)=> {setResults(data.aux_tasks)})
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [results]);
   
   return (
     <div>
@@ -42,7 +59,7 @@ export default () => {
     className="navbar-transparent navbar-theme-primary my-2"
     >
     <Navbar.Brand href="#" className="me-md-3" style={{ padding: 5 }}>
-    ProBe-Ably
+    Probe-Ably
     </Navbar.Brand>
     </Navbar>
     
@@ -50,14 +67,15 @@ export default () => {
     <ProbeControl control={startProbing}/>
     <br/>
 
-    {isProbing == false ? (<></>) : (
+    { isProbing === false ? (<></>) : (
       <Card className="align-items-center">
       <Card.Header className="d-flex flex-row align-items-center flex-0">
       <div className="d-block">
       <h5 className="fw-normal mb-2">Probing Results</h5>
       </div>
       </Card.Header>
-      <Report/>
+      <Report taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress} setTaskProgress={setTaskProgress} setModelProgress={setModelProgress}
+      setProbesProgress={setProbesProgress}/>
       {results == null ? (
         <Row className="justify-content-md-center">
         <Col le={12} className="mb-4 mt-5 d-none d-sm-block">

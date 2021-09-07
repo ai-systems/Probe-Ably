@@ -1,44 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ProgressBar from "./ProgressBar"
 
-const Report = () => {
+const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, setModelProgress, setProbesProgress }) => {
 
-	const [taskProgress, setTaskProgress] = useState(0)
-	const [modelProgress, setModelProgress] = useState(0)
-	const [probesProgress, setProbesProgress] = useState(0)
+    useEffect(() => {
+      const interval = setInterval(() => {
+        fetch("/task_progress")
+        .then((res) => res.json())
+        .then(progress => {setTaskProgress(progress)})
+      }, 500);
 
-	useEffect(() => {
-	  const interval = setInterval(() => {
-	    fetch("/task_progress")
-		  .then((prog_data)=> prog_data.json())
-		  .then((prog)=>{setTaskProgress(prog)});
-	  }, 500);
+      return () => clearInterval(interval);
+    }, [taskProgress, setTaskProgress]);
 
-	  return () => clearInterval(interval);
-	}, []);
+    useEffect(() => {
+      const interval = setInterval(() => {
+        fetch("/model_progress")
+        .then((res) => res.json())
+        .then((prog)=>{setModelProgress(prog)});
+      }, 500);
+      return () => clearInterval(interval);
+    }, [modelProgress, setModelProgress]);
 
-	useEffect(() => {
-	  const interval = setInterval(() => {
-	    fetch("/model_progress")
-		  .then((prog_data)=> prog_data.json())
-		  .then((prog)=>{setModelProgress(prog)});
-	  }, 500);
-	  return () => clearInterval(interval);
-	}, []);
-
-	useEffect(() => {
-	  const interval = setInterval(() => {
-	    fetch("/probes_progress")
-		  .then((prog_data)=> prog_data.json())
-		  .then((prog)=>{setProbesProgress(prog)});
-	  }, 500);
-	  return () => clearInterval(interval);
-	}, []);
+    useEffect(() => {
+      const interval = setInterval(() => {
+        fetch("/probes_progress")
+        .then((res) => res.json())
+        .then((prog)=>{setProbesProgress(prog)});
+      }, 500);
+      return () => clearInterval(interval);
+    }, [probesProgress, setProbesProgress]);
 
 
-	return (
-	<ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
-	)
-	}
+    return (
+    <ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
+    )
+    }
 
 export default Report

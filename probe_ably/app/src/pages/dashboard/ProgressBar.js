@@ -25,7 +25,6 @@ const ProgressBar = ({ taskProgress, modelProgress, probesProgress }) => {
     backgroundColor: 'red',
     borderRadius: 'inherit',
     textAlign: 'right',
-    transition: 'width 1s ease-in-out',
   }
   const probesFillerStyles = {
     height: '100%',
@@ -33,7 +32,6 @@ const ProgressBar = ({ taskProgress, modelProgress, probesProgress }) => {
     backgroundColor: 'red',
     borderRadius: 'inherit',
     textAlign: 'right',
-    transition: 'width 1s ease-in-out',
   }
 
   const labelStyles = {

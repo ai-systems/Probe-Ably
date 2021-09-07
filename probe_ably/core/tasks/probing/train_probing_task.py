@@ -81,7 +81,7 @@ class TrainProbingTask(Task):
 
         return preds_test
 
-    def run(self, tasks: Dict, probing_setup: Dict) -> Dict:
+    def run(self, tasks: Dict, probing_setup: Dict, thread=None) -> Dict:
         """Runs the Probing models
 
         :param tasks: Data content of the models for probing.
@@ -135,6 +135,8 @@ class TrainProbingTask(Task):
             desc=f"Task progress",
             bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.GREEN, Fore.RESET),
         )
+        if thread:
+            thread.task_loop_bar = task_loop_bar
         for id_task, content_tasks in task_loop_bar:
 
             task_loop_bar.set_description(
@@ -149,6 +151,8 @@ class TrainProbingTask(Task):
                 bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET),
                 leave=False,
             )
+            if thread:
+                thread.model_loop_bar = model_loop_bar
             for id_model, model_content in model_loop_bar:
                 model_loop_bar.set_description(
                     f"Model: {model_content['model_name']} progress"
@@ -188,6 +192,8 @@ class TrainProbingTask(Task):
                         bar_format="{l_bar}%s{bar}%s{r_bar}"
                         % (Fore.YELLOW, Fore.RESET),
                     )
+                    if thread:
+                        thread.probes_loop_bar = probes_loop_bar
                     for probe in probes_loop_bar:
                         probes_loop_bar.set_description(
                             f"Probe: {probe_model_name} progress"
