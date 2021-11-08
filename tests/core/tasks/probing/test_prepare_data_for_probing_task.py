@@ -1,17 +1,18 @@
 import unittest
+from unittest import IsolatedAsyncioTestCase
 from loguru import logger
 from probe_ably.core.tasks.utils import ReadInputTask
 from probe_ably.core.tasks.probing import PrepareDataForProbingTask
 
 
-class PrepareProbingDataTest(unittest.TestCase):
-    def test_prepare_data_probing(self):
+class PrepareProbingDataTest(IsolatedAsyncioTestCase):
+    async def test_prepare_data_probing(self):
         TEST_INPUT = (
             "./tests/sample_files/test_input/multi_task_multi_model_with_control.json"
         )
         read_input_task = ReadInputTask()
 
-        output = read_input_task.run(TEST_INPUT)
+        output = await read_input_task.run(TEST_INPUT)
 
         prepare_data_probing_task = PrepareDataForProbingTask()
 
@@ -32,5 +33,5 @@ class PrepareProbingDataTest(unittest.TestCase):
             0
         ]
 
-        self.assertEquals(model_element, control_element)
-        self.assertEquals(total_size, original_size)
+        self.assertEqual(model_element, control_element)
+        self.assertEqual(total_size, original_size)

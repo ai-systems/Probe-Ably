@@ -16,6 +16,7 @@ from probe_ably.core.metrics import AbstractInterModelMetric, AbstractIntraModel
 
 SCHEMA_TEMPLATE_FILE = settings["input_json_schema"]
 
+
 class ModelRepresentationFileNotFound(Exception):
     def __init__(self, model_location):
         self.model_location = model_location
@@ -97,6 +98,15 @@ class ReadInputTask(Task):
             input_data = await input_file.read()
             input_data = json.loads(input_data)
 
+        except FileNotFoundError:
+            print('GOT HERE??')
+            sys.exit(f"Input file not found: {input_file}")
+
+        except json.JSONDecodeError as e:
+            sys.exit(
+                f"Input file is not a properly foramtted json file: {input_file}"
+            )
+
         try:
             with open(SCHEMA_TEMPLATE_FILE, "r") as f:
                 input_template = json.load(f)
@@ -131,12 +141,7 @@ class ReadInputTask(Task):
             ## Getting probe info
             probing_setup = self.parse_probing_setup(input_data)
 
-        except FileNotFoundError:
-            sys.exit(f"Input file not found: {input_file}")
-        except json.JSONDecodeError as e:
-            sys.exit(
-                f"Input file is not a properly foramtted json file: {input_file}"
-            )
+
         except jsonschema.ValidationError as e:
             logger.error(e)
             sys.exit(
