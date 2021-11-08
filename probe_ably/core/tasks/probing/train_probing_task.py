@@ -39,6 +39,7 @@ class TrainProbingTask(Task):
         n_gpu,
         num_epochs,
         eval_fn,
+        return_trained_model=False
     ):
         outputs = {}
         # logger.info("Running train mode")
@@ -79,9 +80,18 @@ class TrainProbingTask(Task):
             eval_fn,
         )
 
-        return preds_test
+        if return_trained_model:
+            return {
+                "preds_test": preds_test,
+                "trained_model": best_model
+            }
 
-    def run(self, tasks: Dict, probing_setup: Dict, thread=None) -> Dict:
+        else: 
+            return {
+                "preds_test": preds_test
+                }
+
+    def run(self, tasks: Dict, probing_setup: Dict, thread=None, return_trained_model=False) -> Dict:
         """Runs the Probing models
 
         :param tasks: Data content of the models for probing.
@@ -91,7 +101,7 @@ class TrainProbingTask(Task):
         :return: Dictionary containing the following values:
         {int(task id) :
             "models": {
-                int(model id) : {
+                int (model id) : {
                     str (name of probing model) : {
                         int (run number) : {
                             "complexity": {
@@ -200,7 +210,7 @@ class TrainProbingTask(Task):
                         )
                         probe_for_model = deepcopy(probe)
                         probe_for_control = deepcopy(probe)
-                        preds_model = self.start_training_process(
+                        train_output = self.start_training_process(
                             train=model_content["model"]["train"],
                             test=model_content["model"]["test"],
                             dev=model_content["model"]["dev"],
@@ -210,7 +220,12 @@ class TrainProbingTask(Task):
                             num_epochs=probe_content["epochs"],
                             n_gpu=n_gpu,
                             eval_fn=intra_metric_object.calculate_metrics,
+                            return_trained_model=return_trained_model
                         )
+
+                        preds_model = train_output["preds_test"]
+                        if return_trained_model:
+                            trained_probe_model  = train_output["trained_model"]
 
                         if model_content["default_control"]:
                             test_control_set = model_content["control"]["train"]
@@ -226,7 +241,9 @@ class TrainProbingTask(Task):
                             num_epochs=probe_content["epochs"],
                             n_gpu=n_gpu,
                             eval_fn=intra_metric_object.calculate_metrics,
-                        )
+                            return_trained_model=False
+                        )["preds_test"]
+
                         output_results[id_task]["models"][id_model][probe_model_name][
                             run_number
                         ] = {
@@ -240,6 +257,10 @@ class TrainProbingTask(Task):
                                 "preds": preds_control,
                             },
                         }
+                        if return_trained_model:
+                            output_results[id_task]["models"][id_model][probe_model_name][
+                                run_number
+                            ][model]["trained_model"] =  trained_probe_model
 
                         run_number += 1
         return output_results

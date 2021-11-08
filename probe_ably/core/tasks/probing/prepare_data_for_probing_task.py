@@ -33,7 +33,7 @@ class PrepareDataForProbingTask(Task):
 
         return X_train, X_val, X_test, y_train, y_val, y_test
 
-    def run(self, tasks_data: Dict, experiment_setup: Dict) -> Dict:
+    def run(self, tasks_data: Dict, experiment_setup: Dict, return_trained_model: bool = False) -> Dict:
         """Reads the task_data and experiment_setup, splits into train/dev/test and
         creates a TorchDataset for each.
 
