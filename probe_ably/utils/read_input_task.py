@@ -8,12 +8,10 @@ import jsonschema
 import os.path
 import pandas as pd
 import numpy as np
-from dynaconf import settings
 from probe_ably.probing import GenerateControlTask
 from probe_ably.models import AbstractModel
 from probe_ably.metrics import AbstractInterModelMetric, AbstractIntraModelMetric
-
-SCHEMA_TEMPLATE_FILE = settings["input_json_schema"]
+from probe_ably.constants import DEFAULT_PROBING_SETUP, SCHEMA_TEMPLATE_FILE
 
 class ModelRepresentationFileNotFound(Exception):
     def __init__(self, model_location):
@@ -36,7 +34,7 @@ def load_input(input_file_location):
     """Function that parses the input configuration file provided by the user.
 
     :param input_file_location: Input json file containing the representations for probing and probing setup.
-        The file should follow the template in settings["input_json_schema"]
+        The file should follow the template in probe_ably/config/json_schema/input_file.json
     :type input_file_location: str
     :return: Dictionary of the parsed input, in the following format:
     {
@@ -77,6 +75,7 @@ def load_input(input_file_location):
     }
     :rtype: Dict
     """
+
     with open(input_file_location, "r") as f:
         input_data = json.load(f)
         logger.debug(f"Opening file located in {input_file_location}")
@@ -212,7 +211,7 @@ class ReadInputTask(Task):
     @staticmethod
     def parse_probing_setup(input_data):
         if "probing_setup" not in input_data:
-            with open(settings["default_probing_setup"], "r") as f:
+            with open(DEFAULT_PROBING_SETUP, "r") as f:
                 probing_setup = json.load(f)
 
             logger.info(
