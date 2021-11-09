@@ -8,10 +8,11 @@ import jsonschema
 import os.path
 import pandas as pd
 import numpy as np
-from probe_ably.probing import GenerateControlTask
+from probe_ably.probing.generate_control_task import GenerateControlTask
 from probe_ably.models import AbstractModel
 from probe_ably.metrics import AbstractInterModelMetric, AbstractIntraModelMetric
 from probe_ably.constants import DEFAULT_PROBING_SETUP, SCHEMA_TEMPLATE_FILE
+
 
 class ModelRepresentationFileNotFound(Exception):
     def __init__(self, model_location):
@@ -92,7 +93,7 @@ class ReadInputTask(Task):
             input_data = load_input(input_file)
         except TypeError:
             # UploadFile handling
-            input_data = input_file.read()
+            input_data = await input_file.read()
             input_data = json.loads(input_data)
 
         except FileNotFoundError:
