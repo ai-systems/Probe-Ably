@@ -1,11 +1,11 @@
 {
-	"probe_ably.core.models.mlp.MLPModel": {
+	"probe_ably.models.mlp.MLPModel": {
 		"params": [
 			{
 				"name": "hidden_size",
 				"type": "function",
 				"step": 0.01,
-				"function_location": "probe_ably.core.utils.param_functions.hidden_size_generation",
+				"function_location": "probe_ably.utils.param_functions.hidden_size_generation",
 				"options": [
 					2,
 					5
