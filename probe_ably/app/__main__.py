@@ -1,7 +1,7 @@
 from probe_ably.metrics import ProcessMetricTask
 from probe_ably.utils import ReadInputTask
-from probe_ably.probing import TrainProbingTask, PrepareDataForProbingTask
-
+from probe_ably.probing import TrainProbingTask
+from probe_ably import ProbingExperiment
 from pathlib import Path
 import threading
 import os
@@ -14,7 +14,6 @@ import uvicorn
 
 from pydantic import BaseModel
 
-
 app_dir = Path(os.path.abspath(__file__)).parent
 build_dir = app_dir.joinpath('build')
 print(build_dir)
@@ -22,7 +21,6 @@ print(build_dir)
 # INPUT_FILE = "./tests/sample_files/test_input/multi_task_multi_model_with_control.json"
 probing_task = TrainProbingTask()
 read_input_task = ReadInputTask()
-prepare_data_probing = PrepareDataForProbingTask()
 process_metric_task = ProcessMetricTask()
 
 
@@ -33,24 +31,25 @@ class ProbingThread(threading.Thread):
         self.task_loop_bar = None
         self.model_loop_bar = None
         self.probes_loop_bar = None
-        self.config = None
 
-    async def set_config(self, config_file):
-        self.config = await read_input_task.run(config_file)
+    # async def set_config(self, config_file):
+    #     self.parsed_input = await read_input_task.run(config_file)
 
     def run(self):
-        try:
-            prepared_data = prepare_data_probing.run(
-                self.config["tasks"], self.config["probing_setup"]
-            )
-            train_results = probing_task.run(prepared_data, 
-                    self.config["probing_setup"],
-                    thread=self)
-            processed_results = process_metric_task.run(train_results, 
-                    self.config["probing_setup"]
-            )
-        except TypeError:
-            raise ValueError("Has the config been set?")
+        experiment = ProbingExperiment
+
+        # try:
+        #     prepared_data = prepare_data_probing.run(
+        #         self.config["tasks"], self.config["probing_setup"]
+        #     )
+        #     train_results = probing_task.run(prepared_data, 
+        #             self.config["probing_setup"],
+        #             thread=self)
+        #     processed_results = process_metric_task.run(train_results, 
+        #             self.config["probing_setup"]
+        #     )
+        # except TypeError:
+        #     raise ValueError("Has the config been set?")
 
         return processed_results
 

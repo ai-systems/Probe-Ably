@@ -1,13 +1,12 @@
 import click
 import asyncio
 from uvicorn import config
-from probe_ably.probing import PrepareDataForProbingTask, TrainProbingTask
+from probe_ably.probing import TrainProbingTask
 from probe_ably.metrics import ProcessMetricTask
 from probe_ably.utils import ReadInputTask
 from probe_ably.experiment_setup import ProbingExperiment
 
 read_input_task = ReadInputTask()
-prepare_data_probing = PrepareDataForProbingTask()
 train_probing_task = TrainProbingTask()
 process_metric_task = ProcessMetricTask()
 
@@ -45,8 +44,7 @@ process_metric_task = ProcessMetricTask()
     help="Probing Configuration File",
     default="./tests/sample_files/test_input/multi_task_multi_model_with_control.json")
 def main(config_file):
-    experiment = ProbingExperiment()
-    experiment.from_files(config_file)
+    experiment = ProbingExperiment.from_json(config_file)
     experiment.run()
 
 if __name__ == "__main__":

@@ -9,12 +9,12 @@
                "task_name":{
                   "type":"string"
                },
-               "models":{
+               "representations":{
                   "type":"array",
                   "items":{
                      "type":"object",
                      "properties":{
-                        "model_name":{
+                        "representation_name":{
                            "type":"string"
                         },
                         "file_location":{
@@ -25,7 +25,7 @@
                         }
                      },
                      "required":[
-                        "model_name",
+                        "representation_name",
                         "file_location"
                      ]
                   }
@@ -33,7 +33,7 @@
             },
             "required":[
                "task_name",
-               "models"
+               "representations"
             ]
          }
       },

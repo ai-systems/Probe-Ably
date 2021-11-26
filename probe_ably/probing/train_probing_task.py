@@ -1,16 +1,15 @@
 import random
-from typing import Dict
+from typing import Dict, List
 from copy import copy, deepcopy
 import numpy as np
 import torch
 from loguru import logger
 from prefect import Task
 from probe_ably.metrics import AbstractIntraModelMetric
-from probe_ably.utils import GridModelFactory
+from probe_ably.utils import GridModelFactory, ProbingTask, ProbingConfig, ProbingInput
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from colorama import Fore
-
 
 class TrainProbingTask(Task):
     def __init__(self, **kwargs):
@@ -88,7 +87,7 @@ class TrainProbingTask(Task):
                 "preds_test": preds_test
                 }
 
-    def run(self, tasks: Dict, probing_setup: Dict, thread=None, return_trained_model=False) -> Dict:
+    def run(self, tasks: List[ProbingTask], probing_setup: ProbingConfig, thread=None, return_trained_model=False) -> Dict:
         """Runs the Probing models
 
         :param tasks: Data content of the models for probing.
@@ -138,46 +137,47 @@ class TrainProbingTask(Task):
         intra_metric_object = intra_metric_class()
 
         task_loop_bar = tqdm(
-            tasks.items(),
+            tasks,
             desc=f"Task progress",
             bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.GREEN, Fore.RESET),
         )
         if thread:
             thread.task_loop_bar = task_loop_bar
-        for id_task, content_tasks in task_loop_bar:
-
+        
+        for id_task, content_tasks in enumerate(task_loop_bar):
             task_loop_bar.set_description(
                 f"Task: {content_tasks['task_name']} progress"
             )
             output_results[id_task] = dict()
             output_results[id_task]["models"] = dict()
             output_results[id_task]["task_name"] = content_tasks["task_name"]
-            model_loop_bar = tqdm(
-                content_tasks["models"].items(),
+
+            reps_loop_bar = tqdm(
+                content_tasks["representations"],
                 desc=f"Model progress",
                 bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET),
                 leave=False,
             )
             if thread:
-                thread.model_loop_bar = model_loop_bar
-            for id_model, model_content in model_loop_bar:
-                model_loop_bar.set_description(
-                    f"Model: {model_content['model_name']} progress"
+                thread.reps_loop_bar = reps_loop_bar
+            for id_model, rep_content in enumerate(reps_loop_bar):
+                print('STUFFFFFFFF:', rep_content.keys())
+                reps_loop_bar.set_description(
+                    f"Model: {rep_content['representation_name']} progress"
                 )
+
                 output_results[id_task]["models"][id_model] = dict()
                 output_results[id_task]["models"][id_model][
-                    "model_name"
-                ] = model_content["model_name"]
+                    "representation_name"
+                ] = rep_content["representation_name"]
 
                 model_params = {
-                    "representation_size": model_content["representation_size"],
-                    "n_classes": model_content["number_of_classes"],
+                    "representation_size": rep_content["representation_size"],
+                    "n_classes": rep_content["number_of_classes"],
                 }
                 print(model_params)
 
-                for id_prob_model, probe_content in probing_setup[
-                    "probing_models"
-                ].items():
+                for id_prob_model, probe_content in enumerate(probing_setup["probing_models"]):
                     probe_model_name = probe_content["probing_model_name"]
 
                     probing_models = GridModelFactory.create_models(
@@ -208,9 +208,9 @@ class TrainProbingTask(Task):
                         probe_for_model = deepcopy(probe)
                         probe_for_control = deepcopy(probe)
                         train_output = self.start_training_process(
-                            train=model_content["model"]["train"],
-                            test=model_content["model"]["test"],
-                            dev=model_content["model"]["dev"],
+                            train=rep_content["representation"]["train"],
+                            test=rep_content["representation"]["test"],
+                            dev=rep_content["representation"]["dev"],
                             train_batch_size=train_batch_size,
                             model=probe_for_model,
                             device=device,
@@ -224,14 +224,14 @@ class TrainProbingTask(Task):
                         if return_trained_model:
                             trained_probe_model  = train_output["trained_model"]
 
-                        if model_content["default_control"]:
-                            test_control_set = model_content["control"]["train"]
+                        if rep_content["default_control"]:
+                            test_control_set = rep_content["control"]["train"]
                         else:
-                            test_control_set = model_content["control"]["test"]
+                            test_control_set = rep_content["control"]["test"]
                         preds_control = self.start_training_process(
-                            train=model_content["control"]["train"],
+                            train=rep_content["control"]["train"],
                             test=test_control_set,
-                            dev=model_content["control"]["dev"],
+                            dev=rep_content["control"]["dev"],
                             train_batch_size=train_batch_size,
                             model=probe_for_control,
                             device=device,
@@ -246,7 +246,7 @@ class TrainProbingTask(Task):
                         ] = {
                             "complexity": probe_for_model.get_complexity(),
                             "model": {
-                                "labels": model_content["model"]["test"].labels,
+                                "labels": rep_content["representation"]["test"].labels,
                                 "preds": preds_model,
                             },
                             "control": {
