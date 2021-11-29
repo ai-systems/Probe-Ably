@@ -32,11 +32,12 @@ class ProbingThread(threading.Thread):
         self.model_loop_bar = None
         self.probes_loop_bar = None
 
-    # async def set_config(self, config_file):
-    #     self.parsed_input = await read_input_task.run(config_file)
+    async def set_config(self, config_file):
+        self.parsed_input = await read_input_task.run(config_file)
 
     def run(self):
-        experiment = ProbingExperiment
+        experiment = ProbingExperiment.from_parsed_input(self.parsed_input, thread=self)
+        processed_results = experiment.run()
 
         # try:
         #     prepared_data = prepare_data_probing.run(

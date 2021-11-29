@@ -12,7 +12,7 @@ from probe_ably.probing.generate_control_task import GenerateControlTask
 from probe_ably.models import AbstractModel
 from probe_ably.metrics import AbstractInterModelMetric, AbstractIntraModelMetric
 from probe_ably.constants import DEFAULT_PROBING_SETUP, SCHEMA_TEMPLATE_FILE
-from .input_types import ProbingConfig
+from .input_types import ProbingConfig, ProbingInput
 
 class ModelRepresentationFileNotFound(Exception):
     def __init__(self, model_location):
@@ -93,10 +93,12 @@ class ReadInputTask(Task):
         except TypeError:
             # UploadFile handling
             input_data = input_file.read() #await removed, maybe needed for app?
-            input_data = json.loads(input_data)
+            try:
+                input_data = json.loads(input_data)
+            except TypeError:
+                input_data = json.loads(await input_data)
 
         except FileNotFoundError:
-            print('GOT HERE??')
             sys.exit(f"Input file not found: {input_file}")
 
         except json.JSONDecodeError as e:
@@ -112,6 +114,7 @@ class ReadInputTask(Task):
             output_dict = dict()
             current_task_id = 0
             task_list = input_data["tasks"]
+
             ## Getting input info
             for task_content in task_list:
                 output_dict[current_task_id] = dict()
@@ -157,7 +160,10 @@ class ReadInputTask(Task):
             )
         except ValueError as e:
             sys.exit(e)
-        return {"tasks": output_dict, "probing_config": probing_config}
+
+        parsed_input : ProbingInput = {"tasks": output_dict, "probing_config": probing_config}
+
+        return parsed_input
 
     @staticmethod
     def parse_model_info(model_content, task_name, generate_control_task):

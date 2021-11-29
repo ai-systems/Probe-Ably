@@ -161,7 +161,6 @@ class TrainProbingTask(Task):
             if thread:
                 thread.reps_loop_bar = reps_loop_bar
             for id_model, rep_content in enumerate(reps_loop_bar):
-                print('STUFFFFFFFF:', rep_content.keys())
                 reps_loop_bar.set_description(
                     f"Model: {rep_content['representation_name']} progress"
                 )
@@ -175,7 +174,6 @@ class TrainProbingTask(Task):
                     "representation_size": rep_content["representation_size"],
                     "n_classes": rep_content["number_of_classes"],
                 }
-                print(model_params)
 
                 for id_prob_model, probe_content in enumerate(probing_setup["probing_models"]):
                     probe_model_name = probe_content["probing_model_name"]

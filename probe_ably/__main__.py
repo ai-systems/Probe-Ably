@@ -1,14 +1,5 @@
 import click
-import asyncio
-from uvicorn import config
-from probe_ably.probing import TrainProbingTask
-from probe_ably.metrics import ProcessMetricTask
-from probe_ably.utils import ReadInputTask
-from probe_ably.experiment_setup import ProbingExperiment
-
-read_input_task = ReadInputTask()
-train_probing_task = TrainProbingTask()
-process_metric_task = ProcessMetricTask()
+from probe_ably import ProbingExperiment
 
 # class ProbingExperiment():
 #     def __init__(self) -> None:
@@ -39,6 +30,7 @@ process_metric_task = ProcessMetricTask()
 ###
 # Basic functionality presented as a user interface
 ### 
+
 @click.command()
 @click.option("--config_file",
     help="Probing Configuration File",
