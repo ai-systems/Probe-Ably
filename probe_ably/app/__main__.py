@@ -29,7 +29,7 @@ class ProbingThread(threading.Thread):
         super().__init__()
         self.results = None
         self.task_loop_bar = None
-        self.model_loop_bar = None
+        self.reps_loop_bar = None
         self.probes_loop_bar = None
 
     async def set_config(self, config_file):
@@ -65,7 +65,7 @@ async def start_probing(background_tasks: BackgroundTasks, config_file: UploadFi
 
 @app.get('/model_progress')
 def model_progress():
-    prog = app.probing_thread.model_loop_bar.format_dict
+    prog = app.probing_thread.reps_loop_bar.format_dict
     return prog
 
 @app.get('/task_progress')

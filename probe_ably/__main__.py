@@ -1,35 +1,7 @@
 import click
 from probe_ably import ProbingExperiment
 
-# class ProbingExperiment():
-#     def __init__(self) -> None:
-#         self.prepared_data = None
-#         self.probing_setup = None
 
-#     def from_files(self, config_file, split=False):
-#         parsed_input = asyncio.run(read_input_task.run(config_file))
-#         self.prepared_data = prepare_data_probing.run(
-#             parsed_input["tasks"], parsed_input["probing_setup"]
-#         )
-#         self.probing_setup = parsed_input["probing_setup"]
-    
-
-#     def from_dataloader(self):
-#         pass
-
-
-#     def run(self):
-#             train_results = train_probing_task.run(self.prepared_data, self.probing_setup)
-#             processed_results = process_metric_task.run(
-#                 train_results, self.probing_setup
-#             )
-#             #TODO: repair and restore visualization task
-#             # visualization_task.run(processed_results)
-
-
-###
-# Basic functionality presented as a user interface
-### 
 
 @click.command()
 @click.option("--config_file",
@@ -38,6 +10,8 @@ from probe_ably import ProbingExperiment
 def main(config_file):
     experiment = ProbingExperiment.from_json(config_file)
     experiment.run()
+    #TODO: repair and restore visualization task
+    # visualization_task.run(processed_results)
 
 if __name__ == "__main__":
     main()
