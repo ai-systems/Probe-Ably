@@ -26,7 +26,6 @@ class ProbingExperiment:
     @classmethod
     def from_parsed_input(cls, parsed_input: ProbingInput, thread=None):
         probing_config = parsed_input["probing_config"]
-        logger.info(f'Thread! {thread}')
 
         if parsed_input["tasks"]:
             logger.info("Loading data from paths in config")

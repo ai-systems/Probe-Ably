@@ -1,6 +1,5 @@
 import {
-  Col,
-  Container,
+  Col, Container,
   Navbar,
   Row,
   Spinner,
@@ -9,24 +8,27 @@ import {
 
 import React, { useEffect, useState, useCallback } from "react";
 import Dashboard from "./dashboard/DashboardOverview";
-import ProbeControl from "./forms/ProbeControl";
 import Report from "./dashboard/Report.js"
+import ConfigDashboard from "./forms/ConfigDashboard";
+
+
 
 export default () => {
   const [config, setConfig] = useState(null);
+  // const [config, setConfig] = useState(initialConfig);
   const [isProbing, setIsProbing] = useState(false); 
   const [results, setResults] = useState(null);
 	const [taskProgress, setTaskProgress] = useState(0);
 	const [modelProgress, setModelProgress] = useState(0);
 	const [probesProgress, setProbesProgress] = useState(0);
 
-    // make wrapper function to give child
-  const wrapperSetModelProgress = useCallback(val => {
-    setModelProgress(val);
-  }, [setModelProgress]);
-  const wrapperSetProbesProgress = useCallback(val => {
-    setProbesProgress(val);
-  }, [setProbesProgress]);
+  //   // make wrapper function to give child
+  // const wrapperSetModelProgress = useCallback(val => {
+  //   setModelProgress(val);
+  // }, [setModelProgress]);
+  // const wrapperSetProbesProgress = useCallback(val => {
+  //   setProbesProgress(val);
+  // }, [setProbesProgress]);
 
 const startProbing = async () => {
     var files = document.getElementById("config_file").files;
@@ -37,18 +39,7 @@ const startProbing = async () => {
     const response = await fetch("/start_probing", {method: "POST", body: formData});
     const data = await response.json();
     setResults(data);
-    /// catch errors?
 }
-  console.log(results)
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     fetch("/results")
-  //     .then((res) => res.json())
-  //     .then((data)=> {setResults(data.aux_tasks)})
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [results]);
   
   return (
     <div>
@@ -64,7 +55,7 @@ const startProbing = async () => {
     </Navbar>
     
     <main style={{ padding: 21 }}>
-    <ProbeControl control={startProbing}/>
+    <ConfigDashboard control={startProbing}/>
     <br/>
 
     { isProbing === false ? (<></>) : (
@@ -98,4 +89,3 @@ const startProbing = async () => {
           </div>
           );
         };
-        
