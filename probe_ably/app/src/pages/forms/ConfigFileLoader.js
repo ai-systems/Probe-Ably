@@ -8,21 +8,19 @@ import {
   Form,
 } from "@themesberg/react-bootstrap";
 
-const ProbeControl = ({ control }) => {
+const ConfigFileLoader = ({ control }) => {
 	return(
     <Card
       className="bg-secondamyPDFry-alt shadow-sm"
       style={{ background: "white" }}
     >
       <Card.Header className="d-flex flex-row align-items-center flex-0">
-
-      <Col le={12} className="mb-4 mt-5 d-none d-sm-block">
+      <Col>
       <Form>
       Choose Config File (JSON):
       <Form.Control type="file" id="config_file"/>
       </Form>
-
-		<Button onClick={control}>
+    <Button onClick={control}>
       Start Probing!
     </Button>
     </Col>
@@ -31,4 +29,4 @@ const ProbeControl = ({ control }) => {
 	)
 }
 
-export default ProbeControl
+export default ConfigFileLoader

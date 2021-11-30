@@ -30,7 +30,6 @@ def train_val_test_split(X, y, train_size, val_size, test_size, seed=42):
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 def unpack_rep_data(rep_content: dict, probing_config: ProbingConfig) -> ProbingRepresentation:
-    print(rep_content)
     (
         model_vectors_train,
         model_vectors_val,

@@ -223,7 +223,6 @@ class ReadInputTask(Task):
             logger.info(
                 "No experiment setup provided, using the following default values:"
             )
-            logger.info(probing_config)
         else:
             available_inter_metrics = AbstractInterModelMetric.subclasses
             available_intra_metrics = AbstractIntraModelMetric.subclasses
