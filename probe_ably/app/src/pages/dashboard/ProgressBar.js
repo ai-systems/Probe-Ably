@@ -45,9 +45,7 @@ const ProgressBar = ({ taskProgress, modelProgress, probesProgress }) => {
     height: '90%',
   }
 
-
   return (
-
   <>
      <div>"Tasks:"</div>
     <div style={containerStyles}>
@@ -68,7 +66,6 @@ const ProgressBar = ({ taskProgress, modelProgress, probesProgress }) => {
       </div>
     </div>
   </>
-  );
-};
+  )};
 
 export default ProgressBar;

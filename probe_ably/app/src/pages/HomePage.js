@@ -34,9 +34,11 @@ const startProbing = async (formData) => {
     bg="dark"
     className="navbar-transparent navbar-theme-primary my-2"
     >
-    <Navbar.Brand href="#" className="me-md-3" style={{ padding: 5 }}>
-    Probe-Ably
-    </Navbar.Brand>
+      <Container>
+        <Navbar.Brand href="#" className="me-md-3" style={{ padding: 5 }}>
+          Probe_Ably
+        </Navbar.Brand>
+      </Container>
     </Navbar>
     <main style={{ padding: 21 }}>
     <ConfigDashboard startProbing={startProbing}/>

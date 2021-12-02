@@ -33,6 +33,5 @@ const ConfigFileLoader = ({ startProbing }) => {
         (File Format Guide)
         </p>
    </Container>
-	)
-}
+)}
 export default ConfigFileLoader

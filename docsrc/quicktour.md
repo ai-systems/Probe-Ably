@@ -1,5 +1,31 @@
 # Quick Start
 
+## Application
+We recommend using the browser-based application interface if you are new to probing.
+
+Run the app using:
+```
+python -m probe_ably.app
+```
+
+
+## As a Python Library
+Follow the installation guidelines. 
+
+### Default Probing Configuration
+'''
+from probe_ably import ProbingExperiment
+experiment = ProbingExperiment.from_config("default")
+experiment.representations = data # dataframe, torch tensor or np.array of vector representations
+experiment.labels = labels # array-like
+experiment.run()
+'''
+
+### Custom Probing Configuration
+
+### Custom Probing Configuration with Data Paths
+
+## CLI 
 ## Representation File
 
 The representation file that you are going to test in expected to be a tab seperated `tsv` file with one column for each dimension, separated by \t, last column is assumed to be the label.
@@ -67,8 +93,3 @@ In this configuration file.
 At the end of the probe you will be directed or prompted to visit the following address: `http://127.0.0.1:8031/` where you can see the visualzation output.
 
 By default probing will run the `Linear Model` and `MLP Model` with Accuracy and Selectivity as the default metrics. If you want to change the run configurations of these models see [Probing Configurations](/advanced/configurations.md).
-
-
-
-
-

@@ -7,6 +7,7 @@ import {
   Row,
   Spinner,
   Card,
+  Nav,
 } from "@themesberg/react-bootstrap";
 
 const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, setModelProgress, setProbesProgress, results, setResults }) => {
@@ -42,11 +43,11 @@ const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, 
     return (
       <Container>
       <Card className="align-items-center">
-      <Card.Header className="d-flex flex-row align-items-center flex-0">
+      {/* <Card.Header className="d-flex flex-row align-items-center flex-0">
       <div className="d-block">
       <h5 className="fw-normal mb-2">Probing Results</h5>
       </div>
-      </Card.Header>
+      </Card.Header> */}
       <ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
       {results == null ? (
         <Row className="justify-content-md-center">
