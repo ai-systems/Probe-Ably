@@ -7,7 +7,15 @@ import {
   Container
 } from "@themesberg/react-bootstrap";
 
-const ConfigFileLoader = ({ control }) => {
+const ConfigFileLoader = ({ startProbing }) => {
+
+  const submit = async () => {
+    var files = document.getElementById("config_file").files;
+    var formData = new FormData();
+    formData.append('config_file', files[0]);
+    startProbing(formData);
+  }
+
 	return(
     <Container>
       Choose Config File (JSON):
@@ -16,7 +24,7 @@ const ConfigFileLoader = ({ control }) => {
       <Form.Control type="file" id="config_file"/>
     </Col>
     <Col>
-      <Button onClick={control}>
+      <Button onClick={submit}>
         Start Probing!
       </Button>
       </Col>

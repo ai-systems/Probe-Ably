@@ -1,7 +1,15 @@
 import React, { useEffect } from "react";
 import ProgressBar from "./ProgressBar"
+import Dashboard from "./DashboardOverview";
+import {
+  Col, Container,
+  Navbar,
+  Row,
+  Spinner,
+  Card,
+} from "@themesberg/react-bootstrap";
 
-const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, setModelProgress, setProbesProgress }) => {
+const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, setModelProgress, setProbesProgress, results, setResults }) => {
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -31,10 +39,34 @@ const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, 
       return () => clearInterval(interval);
     }, [probesProgress, setProbesProgress]);
 
-
     return (
-    <ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
-    )
-    }
+      <Container>
+      <Card className="align-items-center">
+      <Card.Header className="d-flex flex-row align-items-center flex-0">
+      <div className="d-block">
+      <h5 className="fw-normal mb-2">Probing Results</h5>
+      </div>
+      </Card.Header>
+      <ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
+      {results == null ? (
+        <Row className="justify-content-md-center">
+        <Col le={12} className="mb-4 mt-5 d-none d-sm-block">
+        <Container>
+        <Spinner
+        animation="border"
+        role="status"
+        style={{ width: "10rem", height: "10rem" }}
+        >
+        <span className="sr-only">Loading...</span>
+        </Spinner>
+        </Container>
+        </Col>
+        </Row>
+        ) : (
+          <Dashboard tasks={results} />
+          )}
+          </Card>
+          </Container>)
+    };
 
 export default Report

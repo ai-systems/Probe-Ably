@@ -5,11 +5,13 @@ import {
     Row,
     Tab,
     Nav,
+    Form,
     Container
 } from "@themesberg/react-bootstrap";
 import ConfigFileLoader from "./ConfigFileLoader";
+import ConfigForm from "./ConfigForm"
 
-const ConfigDashboard = ({ control }) => {
+const ConfigDashboard = ({ startProbing }) => {
     return(
         <div>
         <Container>
@@ -33,9 +35,10 @@ const ConfigDashboard = ({ control }) => {
     <Col lg={12}>
       <Tab.Content>
         <Tab.Pane eventKey="config_manual" className="py-4">
+          <ConfigForm startProbing={startProbing}></ConfigForm>
         </Tab.Pane>
         <Tab.Pane eventKey="config_file" className="py-4">
-             <ConfigFileLoader control={control}/>
+             <ConfigFileLoader startProbing={startProbing}/>
         </Tab.Pane>
       </Tab.Content>
     </Col>
