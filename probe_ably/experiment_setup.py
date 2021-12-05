@@ -16,12 +16,16 @@ train_probing_task = TrainProbingTask()
 process_metric_task = ProcessMetricTask()
 
 class ProbingExperiment:
-    def __init__(self, tasks: Union[ProbingTask, List[ProbingTask]],
-                    probing_config: ProbingConfig,
-                    thread: threading.Thread = None) -> None:
+    def __init__(self, 
+                probing_config: ProbingConfig,
+                tasks: Union[ProbingTask, List[ProbingTask]] = [],
+                thread: threading.Thread = None):
         self.probing_config = probing_config
         self.tasks = tasks
         self.thread = thread
+
+    def load_tasks(self, tasks: Union[ProbingTask, List[ProbingTask]]):
+        self.tasks = tasks
 
     @classmethod
     def from_parsed_input(cls, parsed_input: ProbingInput, thread=None):
@@ -38,6 +42,7 @@ class ProbingExperiment:
             tasks = []
 
         return cls(tasks, probing_config, thread)
+
 
     @classmethod
     def from_json(cls, config_path: Union[str, pathlib.Path], thread=None):

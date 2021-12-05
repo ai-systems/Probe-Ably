@@ -2,12 +2,14 @@ from typing import Type, TypedDict, List, Union, Dict
 from torch.utils.data import Dataset
 
 class ProbingConfig(TypedDict):
+    probing_models: List[Dict]
+    inter_metric: Union[str, List[str]]
+    intra_metric: Union[str, List[str]]
+    own_splits: bool
     train_size: float
     dev_size: float
     test_size: float
-    inter_metric: Union[str, List[str]]
-    intra_metric: Union[str, List[str]]
-    probing_models: List[Dict]
+
     
 class SplitProbingDataset(TypedDict):
     train: Dataset
@@ -22,6 +24,13 @@ class ProbingRepresentation(TypedDict):
     number_of_classes: int
     default_control: bool 
 
+# class ProbingTaskThing():
+#     def __init__(
+#         task_name:
+#         representations: 
+#     ):
+#         pass
+
 class ProbingTask(TypedDict):
     '''
 
@@ -31,4 +40,4 @@ class ProbingTask(TypedDict):
 
 class ProbingInput(TypedDict):
     tasks: List[ProbingTask]
-    probing_setup: ProbingConfig
+    probing_config: ProbingConfig

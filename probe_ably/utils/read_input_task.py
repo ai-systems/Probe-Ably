@@ -1,3 +1,4 @@
+from posixpath import split
 from prefect import Task
 from typing import Dict
 from loguru import logger
@@ -113,30 +114,35 @@ class ReadInputTask(Task):
 
             output_dict = dict()
             current_task_id = 0
-            task_list = input_data["tasks"]
+            try:
+                task_list = input_data["tasks"]
 
-            ## Getting input info
-            for task_content in task_list:
-                output_dict[current_task_id] = dict()
-                output_dict[current_task_id]["task_name"] = task_content["task_name"]
-                output_dict[current_task_id]["representations"] = dict()
-                models_list = task_content["representations"]
+                ## Getting input info
+                for task_content in task_list:
+                    output_dict[current_task_id] = dict()
+                    output_dict[current_task_id]["task_name"] = task_content["task_name"]
+                    output_dict[current_task_id]["representations"] = dict()
+                    models_list = task_content["representations"]
 
-                current_model_id = 0
-                for model_content in models_list:
-                    if not os.path.isfile(model_content["file_location"]):
-                        raise ModelRepresentationFileNotFound(
-                            model_content["file_location"]
+                    current_model_id = 0
+                    for model_content in models_list:
+                        if not os.path.isfile(model_content["file_location"]):
+                            raise ModelRepresentationFileNotFound(
+                                model_content["file_location"]
+                            )
+
+                        output_dict[current_task_id]["representations"][
+                            current_model_id
+                        ] = self.parse_model_info(
+                            model_content, task_content["task_name"], generate_control_task
                         )
 
-                    output_dict[current_task_id]["representations"][
-                        current_model_id
-                    ] = self.parse_model_info(
-                        model_content, task_content["task_name"], generate_control_task
-                    )
+                        current_model_id += 1
+                    current_task_id += 1
 
-                    current_model_id += 1
-                current_task_id += 1
+            except KeyError:
+                logger.info("No task files referenced in json config, awaiting configuration of probing data.")
+                pass
 
             ## Getting probe info
             probing_config = self.parse_probing_config(input_data)
@@ -161,7 +167,7 @@ class ReadInputTask(Task):
         except ValueError as e:
             sys.exit(e)
 
-        parsed_input : ProbingInput = {"tasks": output_dict, "probing_config": probing_config}
+        parsed_input = {"tasks": output_dict, "probing_config": probing_config}
 
         return parsed_input
 
@@ -221,7 +227,7 @@ class ReadInputTask(Task):
                 probing_config = json.load(f)
 
             logger.info(
-                "No experiment setup provided, using the following default values:"
+                "No experiment setup provided, using the default values. To see the default values, run 'experiment.probing_config'."
             )
         else:
             available_inter_metrics = AbstractInterModelMetric.subclasses
@@ -244,24 +250,37 @@ class ReadInputTask(Task):
                     "intra_metric", input_data["probing_config"]["intra_metric"]
                 )
 
-            split_distribution = (
-                input_data["probing_config"]["train_size"]
-                + input_data["probing_config"]["test_size"]
-                + input_data["probing_config"]["dev_size"]
-            )
-
-            if split_distribution != 1:
-                raise ValueError(
-                    f"Train + Test + Dev size should be equals to 1, got {split_distribution}"
+            try:
+                train_size = input_data["probing_config"]["train_size"]
+                dev_size = input_data["probing_config"]["dev_size"]
+                test_size = input_data["probing_config"]["test_size"]
+                split_distribution = (
+                    train_size
+                    + test_size
+                    + dev_size
                 )
-            probing_config : ProbingConfig = {
-                "inter_metric": input_data["probing_config"]["inter_metric"],
-                "intra_metric": input_data["probing_config"]["intra_metric"],
-                "train_size": input_data["probing_config"]["train_size"],
-                "dev_size": input_data["probing_config"]["dev_size"],
-                "test_size": input_data["probing_config"]["test_size"],
-                "probing_models": list(),
-            }
+
+                if split_distribution != 1:
+                    raise ValueError(
+                        f"Train + Test + Dev size should be equals to 1, got {split_distribution}"
+                    )
+                probing_config : ProbingConfig = {
+                    "inter_metric": input_data["probing_config"]["inter_metric"],
+                    "intra_metric": input_data["probing_config"]["intra_metric"],
+                    "train_size": input_data["probing_config"]["train_size"],
+                    "dev_size": input_data["probing_config"]["dev_size"],
+                    "test_size": input_data["probing_config"]["test_size"],
+                    "probing_models": list(),
+                }
+
+            except KeyError:
+                probing_config : ProbingConfig = {
+                    "inter_metric": input_data["probing_config"]["inter_metric"],
+                    "intra_metric": input_data["probing_config"]["intra_metric"],
+                    "probing_models": list(),
+                    "own_splits": True
+                }
+
 
             for probe_model in input_data["probing_config"]["probing_models"]:
                 if probe_model["probing_model_name"] not in available_probing_models:
@@ -271,9 +290,6 @@ class ReadInputTask(Task):
 
                 probing_config["probing_models"].append(probe_model)
 
-            logger.info(
-                "Using the experiment setup provided in the input file with values:"
-            )
-            logger.info(probing_config)
+            logger.info(f"Using the experiment setup provided in the input file with values: \n {probing_config}")
 
         return probing_config

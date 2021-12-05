@@ -37,7 +37,7 @@
             ]
          }
       },
-      "probing_setup":{
+      "probing_config":{
          "type":"object",
          "properties":{
             "train_size":{
@@ -89,16 +89,9 @@
             }
          },
          "required":[
-            "train_size",
-            "dev_size",
-            "test_size",
             "intra_metric",
-            "inter_metric",
             "probing_models"
          ]
       }
-   },
-   "required":[
-      "tasks"
-   ]
+   }
 }

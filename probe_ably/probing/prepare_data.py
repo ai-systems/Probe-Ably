@@ -90,26 +90,26 @@ def prep_data_from_parsed_json(parsed_tasks_data: Dict, probing_config: ProbingC
     """Reads the task_data and experiment_setup, splits into train/dev/test and
     creates a TorchDataset for each.
 
-    :param tasks_data: Tasks info obtained from user input
-    :type tasks_data: Dict
-    :param experiment_setup: Experiment setup obtained from default file or user input
-    :type experiment_setup: Dict
-    :return: Dictonary of processed data in the format:
-    { task_id:
-        {'task_name': str,
-        'models':
-            {model_id:
-                {"model_name": str,
-                    "model": {"train": numpy.ndarray, "dev": numpy.ndarray, "test": numpy.ndarray},
-                    "control": {"train": numpy.ndarray, "dev": numpy.ndarray, "test": numpy.ndarray},
-                    "representation_size": int,
-                    "number_of_classes": int,
-                    "default_control": boolean (False if user inputs control task)
-                }
-            }
-        }
-    }
-    :rtype: Dict
+    # :param tasks_data: Tasks info obtained from user input
+    # :type tasks_data: Dict
+    # :param experiment_setup: Experiment setup obtained from default file or user input
+    # :type experiment_setup: Dict
+    # :return: Dictonary of processed data in the format:
+    # { task_id:
+    #     {'task_name': str,
+    #     'models':
+    #         {model_id:
+    #             {"model_name": str,
+    #                 "model": {"train": numpy.ndarray, "dev": numpy.ndarray, "test": numpy.ndarray},
+    #                 "control": {"train": numpy.ndarray, "dev": numpy.ndarray, "test": numpy.ndarray},
+    #                 "representation_size": int,
+    #                 "number_of_classes": int,
+    #                 "default_control": boolean (False if user inputs control task)
+    #             }
+    #         }
+    #     }
+    # }
+    # :rtype: Dict
     """
 
     logger.debug("Prepare the data for probing.")
