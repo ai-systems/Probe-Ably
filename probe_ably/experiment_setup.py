@@ -41,8 +41,7 @@ class ProbingExperiment:
         else: 
             tasks = []
 
-        return cls(tasks, probing_config, thread)
-
+        return cls(probing_config, tasks, thread)
 
     @classmethod
     def from_json(cls, config_path: Union[str, pathlib.Path], thread=None):
@@ -51,18 +50,6 @@ class ProbingExperiment:
 
         with open(config_path) as config_file:
             parsed_input = asyncio.run(read_input_task.run(config_file))
-
-            # probing_config = parsed_input["probing_config"]
-
-            # if parsed_input["tasks"]:
-            #     logger.info("Loading data from paths in config")
-
-            #     tasks = prep_data_from_parsed_json(
-            #                 parsed_input["tasks"], 
-            #                 parsed_input["probing_config"]
-            #                 )
-            # else: 
-            #     tasks = []
 
         return cls.from_parsed_input(parsed_input, thread=thread)
         

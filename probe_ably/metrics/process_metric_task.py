@@ -28,16 +28,16 @@ class ProcessMetricTask(Task):
         intra_eval_metric, intra_eval_name = intra_metric, intra_metric.metric_name()
 
         processed_aux_tasks = []
-        probing_models, models, x_axis_data, y_axis_data = set(), set(), set(), set()
+        probing_models, reps, x_axis_data, y_axis_data = set(), set(), set(), set()
         for task_id, task_data in tqdm(train_results.items(), "Processing task data"):
             processed_task = {}
             processed_task["id"] = task_id
             processed_task["name"] = task_data["task_name"]
             processed_task["probings"] = defaultdict(lambda: [])
-            for _, model_data in task_data["models"].items():
-                model_name = model_data["model_name"]
-                for probing_model, probing_data in model_data.items():
-                    if probing_model != "model_name":
+            for _, rep_data in task_data["models"].items():
+                rep_name = rep_data["representation_name"]
+                for probing_model, probing_data in rep_data.items():
+                    if probing_model != "representation_name":
                         for p_data in probing_data.values():
                             for cplx_key, cplx_data in p_data["complexity"].items():
                                 model_gold, model_preds = (
@@ -61,7 +61,7 @@ class ProcessMetricTask(Task):
                                 processed_task["probings"][
                                     (
                                         probing_model,
-                                        model_name,
+                                        rep_name,
                                         cplx_key,
                                         inter_eval_name,
                                     )
@@ -73,7 +73,7 @@ class ProcessMetricTask(Task):
                                 )
 
                                 probing_models.add(probing_model)
-                                models.add(model_name)
+                                reps.add(rep_name)
                                 x_axis_data.add(cplx_key)
                                 y_axis_data.add(inter_eval_name)
                                 y_axis_data.add(intra_eval_name)
@@ -81,7 +81,7 @@ class ProcessMetricTask(Task):
                                 processed_task["probings"][
                                     (
                                         probing_model,
-                                        model_name,
+                                        rep_name,
                                         cplx_key,
                                         intra_eval_name,
                                     )
@@ -101,28 +101,28 @@ class ProcessMetricTask(Task):
             visual_data_task["probings"] = []
             for probing_model in probing_models:
                 probing_data = {}
-                probing_data["model_name"] = probing_model
+                probing_data["representation_name"] = probing_model
                 probing_data["probing_results"] = []
                 for x_axis in x_axis_data:
                     for y_axis in y_axis_data:
-                        model_data = {}
-                        for model_name in models:
+                        rep_data = {}
+                        for rep_name in reps:
                             if (
                                 len(
                                     processed_task["probings"][
-                                        (probing_model, model_name, x_axis, y_axis)
+                                        (probing_model, rep_name, x_axis, y_axis)
                                     ]
                                 )
                                 > 0
                             ):
                                 m_data = {
-                                    "id": model_name,
+                                    "id": rep_name,
                                     "color": f"hsl({random.randint(1,360)}, {int(random.randint(1,9))*10}%, {int(random.randint(1,9))*10}%)",
                                 }
                                 m_data["data"] = []
                                 x, y = [], []
                                 for point in processed_task["probings"][
-                                    (probing_model, model_name, x_axis, y_axis)
+                                    (probing_model, rep_name, x_axis, y_axis)
                                 ]:
                                     x.append(point["x"])
                                     y.append(point["y"])
@@ -132,13 +132,13 @@ class ProcessMetricTask(Task):
                                         {"x": x[index], "y": y[index]}
                                     )
 
-                                if "chart_data" not in model_data:
-                                    model_data["x_axis"] = x_axis
-                                    model_data["y_axis"] = y_axis
-                                    model_data["chart_data"] = []
-                                model_data["chart_data"].append(m_data)
-                        if len(model_data) > 0:
-                            probing_data["probing_results"].append(model_data)
+                                if "chart_data" not in rep_data:
+                                    rep_data["x_axis"] = x_axis
+                                    rep_data["y_axis"] = y_axis
+                                    rep_data["chart_data"] = []
+                                rep_data["chart_data"].append(m_data)
+                        if len(rep_data) > 0:
+                            probing_data["probing_results"].append(rep_data)
                 visual_data_task["probings"].append(probing_data)
             visual_data_tasks.append(visual_data_task)
         return visual_data_tasks
