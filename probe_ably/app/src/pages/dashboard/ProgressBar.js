@@ -1,5 +1,4 @@
 import React from "react";
-import fireparrot from "../../assets/fireparrot.gif"
 
 const ProgressBar = ({ taskProgress, modelProgress, probesProgress }) => {
 
@@ -62,7 +61,7 @@ const ProgressBar = ({ taskProgress, modelProgress, probesProgress }) => {
 	  <div>"Training Probes:"</div>	
     <div style={containerStyles}>
       <div style={probesFillerStyles}>
-        <span style={labelStyles}>{`${probesProgress.n}/${probesProgress.total}`}<img style={imgStyle} src={fireparrot}/></span>
+        <span style={labelStyles}>{`${probesProgress.n}/${probesProgress.total}`}</span>
       </div>
     </div>
   </>

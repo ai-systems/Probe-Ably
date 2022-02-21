@@ -7,15 +7,15 @@
    "probing_models":[
       {
          "probing_model_name":"probe_ably.models.linear.LinearModel",
-         "batch_size":32,
-         "epochs":25,
-         "number_of_models":50
+         "batch_size":16,
+         "epochs":10,
+         "number_of_models":20
       },
       {
          "probing_model_name":"probe_ably.models.mlp.MLPModel",
-         "batch_size":32,
-         "epochs":25,
-         "number_of_models":50
+         "batch_size":16,
+         "epochs":10,
+         "number_of_models":20
       }
    ]
 }

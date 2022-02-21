@@ -45,7 +45,7 @@ class ProbingExperiment:
 
     @classmethod
     def from_json(cls, config_path: Union[str, pathlib.Path], thread=None):
-        if config_path is "default":
+        if config_path == "default":
             config_path = DEFAULT_PROBING_SETUP
 
         with open(config_path) as config_file:
@@ -59,5 +59,6 @@ class ProbingExperiment:
             train_results, self.probing_config
         )
 
+        # visualization_task.run(processed_results)
         return processed_results
         # visualization_task.run(processed_results)

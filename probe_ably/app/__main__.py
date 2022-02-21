@@ -31,13 +31,15 @@ class ProbingThread(threading.Thread):
         self.task_loop_bar = None
         self.reps_loop_bar = None
         self.probes_loop_bar = None
+        self.results = None
 
     async def set_config(self, config_file):
         self.parsed_input = await read_input_task.run(config_file)
 
     def run(self):
         experiment = ProbingExperiment.from_parsed_input(self.parsed_input, thread=self)
-        processed_results = experiment.run()
+        results = experiment.run()
+        return results
 
         # try:
         #     prepared_data = prepare_data_probing.run(
@@ -52,8 +54,6 @@ class ProbingThread(threading.Thread):
         # except TypeError:
         #     raise ValueError("Has the config been set?")
 
-        return processed_results
-
 app = FastAPI()
 app.probing_thread = ProbingThread()
 
@@ -61,6 +61,8 @@ app.probing_thread = ProbingThread()
 async def start_probing(background_tasks: BackgroundTasks, config_file: UploadFile = File(...), ):
     await app.probing_thread.set_config(config_file)
     results = await run_in_threadpool(app.probing_thread.run)
+    print(results)
+    app.probing_thread.results = results
     return results
 
 @app.get('/model_progress')
@@ -77,6 +79,11 @@ async def task_progress():
 def probes_progress():
     prog = app.probing_thread.probes_loop_bar.format_dict
     return prog
+
+@app.get('/results')
+def get_results():
+    results = app.probing_thread.results
+    return results
 
 
 app.mount("/", StaticFiles(directory=build_dir, html = True), name="static")

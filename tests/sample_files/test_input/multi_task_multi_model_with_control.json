@@ -49,8 +49,8 @@
          {
             "probing_model_name":"probe_ably.models.mlp.MLPModel",
             "batch_size":5,
-            "epochs":20,
-            "number_of_models":10
+            "epochs":10,
+            "number_of_models":5
          }
       ]
    }

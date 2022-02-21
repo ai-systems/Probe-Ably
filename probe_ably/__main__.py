@@ -1,8 +1,6 @@
 import click
 from probe_ably import ProbingExperiment
 
-
-
 @click.command()
 @click.option("--config_file",
     help="Probing Configuration File",
