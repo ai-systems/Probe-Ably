@@ -22,6 +22,7 @@ import HomePage from "./pages/HomePage";
 // core styles
 import "./scss/volt.scss";
 
+
 ReactDOM.render(
   <div>
     {/* <ScrollToTop /> */}

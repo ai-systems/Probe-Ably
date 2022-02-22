@@ -41,19 +41,6 @@ class ProbingThread(threading.Thread):
         results = experiment.run()
         return results
 
-        # try:
-        #     prepared_data = prepare_data_probing.run(
-        #         self.config["tasks"], self.config["probing_setup"]
-        #     )
-        #     train_results = probing_task.run(prepared_data, 
-        #             self.config["probing_setup"],
-        #             thread=self)
-        #     processed_results = process_metric_task.run(train_results, 
-        #             self.config["probing_setup"]
-        #     )
-        # except TypeError:
-        #     raise ValueError("Has the config been set?")
-
 app = FastAPI()
 app.probing_thread = ProbingThread()
 

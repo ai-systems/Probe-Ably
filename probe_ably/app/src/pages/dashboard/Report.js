@@ -12,7 +12,7 @@ import {
 } from "@themesberg/react-bootstrap";
 
 
-const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, setModelProgress, setProbesProgress, results, setResults }) => {
+const Report = ({ taskProgress, modelProgress, probesProgress, setTaskProgress, setModelProgress, setProbesProgress, results }) => {
 
 const imgStyle = {
   paddingRight: '3px',
@@ -55,21 +55,21 @@ const imgStyle = {
       <h5 className="fw-normal mb-2">Probing Results</h5>
       </div>
       </Card.Header> */}
-      <ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
       {results == null ? (
         <Row className="justify-content-md-center">
         <Col le={12} className="mb-4 mt-5 d-none d-sm-block">
+        <ProgressBar taskProgress={taskProgress} modelProgress={modelProgress} probesProgress={probesProgress}/>
         <Container>
         {/* <img style={imgStyle} src={fireparrot}/> */}
+        <center>
         <Spinner
         animation="border"
         role="status"
         style={{ width: "5rem", height: "5rem" }}
         >
-        <center>
+        </Spinner>
         <span className="sr-only">Loading...</span>
         </center>
-        </Spinner>
         </Container>
         </Col>
         </Row>

@@ -6,26 +6,25 @@ import {
   Card,
 } from "@themesberg/react-bootstrap";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Report from "./dashboard/Report.js"
 import ConfigDashboard from "./forms/ConfigDashboard";
 
 export default () => {
-  const [config, setConfig] = useState(null);
-  // const [config, setConfig] = useState(initialConfig);
   const [isProbing, setIsProbing] = useState(false); 
   const [results, setResults] = useState(null);
 	const [taskProgress, setTaskProgress] = useState(0);
 	const [modelProgress, setModelProgress] = useState(0);
 	const [probesProgress, setProbesProgress] = useState(0);
 
-const startProbing = async (formData) => {
+
+  const startProbing = async (formData) => {
     setIsProbing(true);
-    const response = await fetch("/start_probing", {method: "POST", body: formData});
-    const data = await response.json();
-    setResults(data);
-}
-  
+    await fetch("/start_probing", {method: "POST", body: formData})
+    .then(response => response.json())
+    .then(data => setResults(data))
+  }
+
   return (
     <div>
     <Navbar
@@ -49,9 +48,10 @@ const startProbing = async (formData) => {
         setTaskProgress={setTaskProgress}
         setModelProgress={setModelProgress}
         setProbesProgress={setProbesProgress}
+        results={results}
         ></Report>
           )
-    };
+    }
     </main>
     </div>
     )

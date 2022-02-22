@@ -35,7 +35,7 @@ const ConfigDashboard = ({ startProbing }) => {
     <Col lg={12}>
       <Tab.Content>
         <Tab.Pane eventKey="config_manual" className="py-4">
-          <ConfigForm startProbing={startProbing}></ConfigForm>
+          <ConfigForm startProbing={startProbing} ></ConfigForm>
         </Tab.Pane>
         <Tab.Pane eventKey="config_file" className="py-4">
              <ConfigFileLoader startProbing={startProbing}/>
