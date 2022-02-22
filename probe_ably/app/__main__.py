@@ -6,13 +6,10 @@ from pathlib import Path
 import threading
 import os
 
-from fastapi import FastAPI, UploadFile, File, Request, BackgroundTasks
-from fastapi.encoders import jsonable_encoder
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.concurrency import run_in_threadpool
 import uvicorn
-
-from pydantic import BaseModel
 
 app_dir = Path(os.path.abspath(__file__)).parent
 build_dir = app_dir.joinpath('build')
@@ -31,10 +28,11 @@ class ProbingThread(threading.Thread):
         self.task_loop_bar = None
         self.reps_loop_bar = None
         self.probes_loop_bar = None
-        self.results = None
+
 
     async def set_config(self, config_file):
         self.parsed_input = await read_input_task.run(config_file)
+
 
     def run(self):
         experiment = ProbingExperiment.from_parsed_input(self.parsed_input, thread=self)
@@ -44,33 +42,42 @@ class ProbingThread(threading.Thread):
 app = FastAPI()
 app.probing_thread = ProbingThread()
 
+
 @app.post("/start_probing")
 async def start_probing(background_tasks: BackgroundTasks, config_file: UploadFile = File(...), ):
     await app.probing_thread.set_config(config_file)
     results = await run_in_threadpool(app.probing_thread.run)
-    print(results)
-    app.probing_thread.results = results
     return results
+
 
 @app.get('/model_progress')
 def model_progress():
-    prog = app.probing_thread.reps_loop_bar.format_dict
-    return prog
+    bar = app.probing_thread.reps_loop_bar
+    if bar:
+        prog = bar.format_dict
+        return prog
+    else:
+        return {'n': 0, 'total':0}
+
 
 @app.get('/task_progress')
 async def task_progress():
-    prog = app.probing_thread.task_loop_bar.format_dict
-    return prog
+    bar = app.probing_thread.task_loop_bar
+    if bar:
+        prog = bar.format_dict
+        return prog
+    else:
+        return {'n': 0, 'total':0}
     
+
 @app.get('/probes_progress')
 def probes_progress():
-    prog = app.probing_thread.probes_loop_bar.format_dict
-    return prog
-
-@app.get('/results')
-def get_results():
-    results = app.probing_thread.results
-    return results
+    bar = app.probing_thread.probes_loop_bar
+    if bar:
+        prog = bar.format_dict
+        return prog
+    else:
+        return {'n': 0, 'total':0}
 
 
 app.mount("/", StaticFiles(directory=build_dir, html = True), name="static")

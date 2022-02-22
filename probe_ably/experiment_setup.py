@@ -1,10 +1,11 @@
 import asyncio
 import pathlib
-from typing import Type, TypedDict, List, Union
+from typing import List, Union
 from probe_ably.probing import TrainProbingTask
 from probe_ably.metrics import ProcessMetricTask
 from probe_ably.probing.prepare_data import prep_data_from_parsed_json
-from probe_ably.utils import ReadInputTask, ProbingConfig, ProbingTask, ProbingInput
+# from probe_ably.utils import ReadInputTask, ProbingConfig, ProbingTask, ProbingInput
+from probe_ably.utils.input_types import ReadInputTask, ProbingConfig, ProbingTask, ProbingInput
 from probe_ably.constants import DEFAULT_PROBING_SETUP
 from loguru import logger
 from dataclasses import dataclass

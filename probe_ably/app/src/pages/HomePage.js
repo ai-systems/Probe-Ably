@@ -22,7 +22,8 @@ export default () => {
     setIsProbing(true);
     await fetch("/start_probing", {method: "POST", body: formData})
     .then(response => response.json())
-    .then(data => setResults(data))
+    .then(data => setResults(data));
+    setIsProbing(false);
   }
 
   return (
@@ -41,7 +42,6 @@ export default () => {
     </Navbar>
     <main style={{ padding: 21 }}>
     <ConfigDashboard startProbing={startProbing}/>
-    { isProbing === false ? (<></>) : (
       <Report taskProgress={taskProgress} 
         modelProgress={modelProgress} 
         probesProgress={probesProgress} 
@@ -49,9 +49,8 @@ export default () => {
         setModelProgress={setModelProgress}
         setProbesProgress={setProbesProgress}
         results={results}
-        ></Report>
-          )
-    }
+        isProbing={isProbing}>
+      </Report>
     </main>
     </div>
     )

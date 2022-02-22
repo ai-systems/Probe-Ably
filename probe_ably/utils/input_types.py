@@ -10,7 +10,6 @@ class ProbingConfig(TypedDict):
     dev_size: float
     test_size: float
 
-    
 class SplitProbingDataset(TypedDict):
     train: Dataset
     dev: Dataset
@@ -24,17 +23,8 @@ class ProbingRepresentation(TypedDict):
     number_of_classes: int
     default_control: bool 
 
-# class ProbingTaskThing():
-#     def __init__(
-#         task_name:
-#         representations: 
-#     ):
-#         pass
 
 class ProbingTask(TypedDict):
-    '''
-
-    '''
     task_name: str
     representations: List[ProbingRepresentation]
 
