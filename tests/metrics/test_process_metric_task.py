@@ -8,9 +8,9 @@ class ProcessMetricTaskTest(unittest.TestCase):
     def test_process_metric_task(self):
         metric_results = {
             0: {
-                "models": {
+                "representations": {
                     0: {
-                        "model_name": "AUX TASK 1 - MODEL 1",
+                        "representation_name": "AUX TASK 1 - MODEL 1",
                         "probe_ably.models.linear.LinearModel": {
                             0: {
                                 "complexity": {"norm": 1.1320844888687134},
@@ -61,7 +61,7 @@ class ProcessMetricTaskTest(unittest.TestCase):
                         },
                     },
                     1: {
-                        "model_name": "AUX TASK 1 - MODEL 2",
+                        "representation_name": "AUX TASK 1 - MODEL 2",
                         "probe_ably.models.linear.LinearModel": {
                             0: {
                                 "complexity": {"norm": 1.2004743814468384},
@@ -115,9 +115,9 @@ class ProcessMetricTaskTest(unittest.TestCase):
                 "task_name": "AUX TASK 1",
             },
             1: {
-                "models": {
+                "representations": {
                     0: {
-                        "model_name": "AUX TASK 2 - MODEL 1",
+                        "representation_name": "AUX TASK 2 - MODEL 1",
                         "probe_ably.models.linear.LinearModel": {
                             0: {
                                 "complexity": {"norm": 1.0756611824035645},
@@ -168,7 +168,7 @@ class ProcessMetricTaskTest(unittest.TestCase):
                         },
                     },
                     1: {
-                        "model_name": "AUX TASK 2 - MODEL 2",
+                        "representation_name": "AUX TASK 2 - MODEL 2",
                         "probe_ably.models.linear.LinearModel": {
                             0: {
                                 "complexity": {"norm": 1.1543824672698975},
@@ -219,7 +219,7 @@ class ProcessMetricTaskTest(unittest.TestCase):
                         },
                     },
                     2: {
-                        "model_name": "AUX TASK 2 - MODEL 3",
+                        "representation_name": "AUX TASK 2 - MODEL 3",
                         "probe_ably.models.linear.LinearModel": {
                             0: {
                                 "complexity": {"norm": 1.1083829402923584},
@@ -274,6 +274,7 @@ class ProcessMetricTaskTest(unittest.TestCase):
             },
         }
 
+        print(metric_results)
         process_metric_task = ProcessMetricTask()
 
         processed_data = process_metric_task.run(

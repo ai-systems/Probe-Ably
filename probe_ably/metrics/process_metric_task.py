@@ -34,7 +34,7 @@ class ProcessMetricTask(Task):
             processed_task["id"] = task_id
             processed_task["name"] = task_data["task_name"]
             processed_task["probings"] = defaultdict(lambda: [])
-            for _, rep_data in task_data["models"].items():
+            for _, rep_data in task_data["representations"].items():
                 rep_name = rep_data["representation_name"]
                 for probing_model, probing_data in rep_data.items():
                     if probing_model != "representation_name":

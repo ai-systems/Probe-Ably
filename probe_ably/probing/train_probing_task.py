@@ -149,7 +149,7 @@ class TrainProbingTask(Task):
                 f"Task: {content_tasks['task_name']} progress"
             )
             output_results[id_task] = dict()
-            output_results[id_task]["models"] = dict()
+            output_results[id_task]["representations"] = dict()
             output_results[id_task]["task_name"] = content_tasks["task_name"]
 
             reps_loop_bar = tqdm(
@@ -165,8 +165,8 @@ class TrainProbingTask(Task):
                     f"Model: {rep_content['representation_name']} progress"
                 )
 
-                output_results[id_task]["models"][id_model] = dict()
-                output_results[id_task]["models"][id_model][
+                output_results[id_task]["representations"][id_model] = dict()
+                output_results[id_task]["representations"][id_model][
                     "representation_name"
                 ] = rep_content["representation_name"]
 
@@ -184,7 +184,7 @@ class TrainProbingTask(Task):
                         model_params,
                     )
 
-                    output_results[id_task]["models"][id_model][
+                    output_results[id_task]["representations"][id_model][
                         probe_model_name
                     ] = dict()
                     run_number = 0
@@ -239,7 +239,7 @@ class TrainProbingTask(Task):
                             return_trained_model=False
                         )["preds_test"]
 
-                        output_results[id_task]["models"][id_model][probe_model_name][
+                        output_results[id_task]["representations"][id_model][probe_model_name][
                             run_number
                         ] = {
                             "complexity": probe_for_model.get_complexity(),

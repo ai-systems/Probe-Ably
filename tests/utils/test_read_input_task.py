@@ -1,6 +1,7 @@
 from unittest import IsolatedAsyncioTestCase
 from loguru import logger
 from probe_ably.utils import ReadInputTask
+from probe_ably.utils.read_input_task import InputClassNotFound
 
 
 class PrepareRicoScaTest(IsolatedAsyncioTestCase):
@@ -20,7 +21,7 @@ class PrepareRicoScaTest(IsolatedAsyncioTestCase):
 
         output = await read_input_task.run(TEST_INPUT)
 
-        self.assertEqual(len(output["tasks"][0]["models"][0]["model_labels"]), 10)
+        self.assertEqual(len(output["tasks"][0]["representations"][0]["representation_labels"]), 10)
 
     async def test_multi_task_multi_model_with_control_with_no_setup(self):
         TEST_INPUT = "./tests/sample_files/test_input/multi_task_multi_model_with_control_no_setup.json"
@@ -28,7 +29,7 @@ class PrepareRicoScaTest(IsolatedAsyncioTestCase):
 
         output = await read_input_task.run(TEST_INPUT)
 
-        self.assertEqual(output["probing_setup"]["train_size"], 0.60)
+        self.assertEqual(output["probing_config"]["train_size"], 0.60)
 
     async def test_wrong_setup(self):
         TEST_INPUT = "./tests/sample_files/test_input/wrong_setup.json"

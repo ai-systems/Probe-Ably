@@ -13,7 +13,6 @@ import uvicorn
 
 app_dir = Path(os.path.abspath(__file__)).parent
 build_dir = app_dir.joinpath('build')
-print(build_dir)
 
 # INPUT_FILE = "./tests/sample_files/test_input/multi_task_multi_model_with_control.json"
 probing_task = TrainProbingTask()

@@ -107,6 +107,7 @@ class ReadInputTask(Task):
                 f"Input file is not a properly foramtted json file: {input_file}"
             )
 
+        print('Here it is Julia!', input_data)
         try:
             with open(SCHEMA_TEMPLATE_FILE, "r") as f:
                 input_template = json.load(f)
@@ -210,6 +211,8 @@ class ReadInputTask(Task):
         total_number_of_classes = (
             np.amax(np.concatenate((model_labels, control_labels))) + 1
         )
+
+        #TODO: match variable name model_labels to representation_labels, to match the key here
         return {
             "representation_name": model_content["representation_name"],
             "representation_vectors": model_representation,
