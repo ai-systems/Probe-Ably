@@ -4,7 +4,7 @@ import pandas as pd
 
 
 # TODO properly comment this
-class GenerateControlTask(Task):
+class GenerateControlTask():
     @staticmethod
     def get_unique_labels(labels):
         return np.unique(labels)

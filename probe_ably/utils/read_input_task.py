@@ -83,7 +83,7 @@ def load_input(input_file_location):
 
     return input_data
 
-class ReadInputTask(Task):
+class ReadInputTask():
     async def run(self, input_file) -> Dict:
 
         generate_control_task = GenerateControlTask()

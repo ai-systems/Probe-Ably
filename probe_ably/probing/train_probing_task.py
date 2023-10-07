@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from colorama import Fore
 
-class TrainProbingTask(Task):
+class TrainProbingTask():
     def __init__(self, **kwargs):
         self.cuda = kwargs.pop("cuda", True)
         self.logging_steps = kwargs.get("logging_steps", 5)
@@ -128,7 +128,7 @@ class TrainProbingTask(Task):
 
         n_gpu = torch.cuda.device_count()
         self.set_seed(n_gpu)
-        self.logger.info(f"GPUs used {n_gpu}")
+        logger.info(f"GPUs used {n_gpu}")
 
         output_results = dict()
         intra_metric_class = AbstractIntraModelMetric.subclasses[

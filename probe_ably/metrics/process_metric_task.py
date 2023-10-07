@@ -10,7 +10,7 @@ from probe_ably.metrics.abstract_intra_model_metric import AbstractIntraModelMet
 from tqdm import tqdm
 
 
-class ProcessMetricTask(Task):
+class ProcessMetricTask():
     def run(
         self, train_results: Dict[str, Dict], probing_configuration: Dict[str, Dict]
     ):

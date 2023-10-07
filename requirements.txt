@@ -2,7 +2,7 @@ tqdm
 prefect
 loguru
 ujson
-sklearn
+scikit-learn
 pandas
 numpy
 click

@@ -8,8 +8,6 @@ from probe_ably import ProbingExperiment
 def main(config_file):
     experiment = ProbingExperiment.from_json(config_file)
     experiment.run()
-    #TODO: repair and restore visualization task
-    # visualization_task.run(processed_results)
 
 if __name__ == "__main__":
     main()
