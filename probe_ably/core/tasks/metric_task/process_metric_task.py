@@ -4,7 +4,6 @@ from typing import Dict
 
 import numpy as np
 from loguru import logger
-from overrides import overrides
 from prefect import Task
 from probe_ably.core.metrics.abstract_inter_model_metric import AbstractInterModelMetric
 from probe_ably.core.metrics.abstract_intra_model_metric import AbstractIntraModelMetric

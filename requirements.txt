@@ -1,13 +1,14 @@
 tqdm
 dynaconf[all]
-prefect
+prefect==0.8.1
+Werkzeug==2.2.2
+torch==1.8.0
 loguru
 ujson
-sklearn
+scikit-learn
 pandas
 numpy
 click
-torch
 colorama
 jsonschema
 flask
