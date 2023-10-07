@@ -2,14 +2,14 @@
    "tasks":[
       {
          "task_name":"AUX TASK 1",
-         "models":[
+         "representations":[
             {
-               "model_name":"AUX TASK 1 - MODEL 1",
+               "representation_name":"AUX TASK 1 - MODEL 1",
                "file_location":"./tests/sample_files/test_representation/model1_test.tsv",
                "control_location":"./tests/sample_files/test_representation/model1_test_control.tsv"
             },
             {
-               "model_name":"AUX TASK 1 - MODEL 2",
+               "representation_name":"AUX TASK 1 - MODEL 2",
                "file_location":"./tests/sample_files/test_representation/model2_test.tsv",
                "control_location":"./tests/sample_files/test_representation/model2_test_control.tsv"
             }
@@ -17,28 +17,28 @@
       },
       {
          "task_name":"AUX TASK 2",
-         "models":[
+         "representations":[
             {
-               "model_name":"AUX TASK 2 - MODEL 1",
+               "representation_name":"AUX TASK 2 - MODEL 1",
                "file_location":"./tests/sample_files/test_representation/model3_test.tsv"
             },
             {
-               "model_name":"AUX TASK 2 - MODEL 2",
+               "representation_name":"AUX TASK 2 - MODEL 2",
                "file_location":"./tests/sample_files/test_representation/model4_test.tsv"
             },
             {
-               "model_name":"AUX TASK 2 - MODEL 3",
+               "representation_name":"AUX TASK 2 - MODEL 3",
                "file_location":"./tests/sample_files/test_representation/model5_test.tsv"
             }
          ]
       }
    ],
-   "probing_setup":{
+   "probing_config":{
       "train_size":0.50,
       "dev_size":0.25,
       "test_size":0.25,
-      "intra_metric":"probe_ably.core.metrics.accuracy.AccuracMetric",
-      "inter_metric":"probe_ably.core.metrics.selectivity.SelectivityMetric",
+      "intra_metric":"probe_ably.metrics.accuracy.AccuracMetric",
+      "inter_metric":"probe_ably.metrics.selectivity.SelectivityMetric",
       "probing_models":[
          {
             "probing_model_name":"probe_ably.core.models.linear.LinearModel",

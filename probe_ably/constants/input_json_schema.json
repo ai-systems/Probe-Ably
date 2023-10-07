@@ -1,0 +1,97 @@
+{
+   "type":"object",
+   "properties":{
+      "tasks":{
+         "type":"array",
+         "items":{
+            "type":"object",
+            "properties":{
+               "task_name":{
+                  "type":"string"
+               },
+               "representations":{
+                  "type":"array",
+                  "items":{
+                     "type":"object",
+                     "properties":{
+                        "representation_name":{
+                           "type":"string"
+                        },
+                        "file_location":{
+                           "type":"string"
+                        },
+                        "control_location":{
+                           "type":"string"
+                        }
+                     },
+                     "required":[
+                        "representation_name",
+                        "file_location"
+                     ]
+                  }
+               }
+            },
+            "required":[
+               "task_name",
+               "representations"
+            ]
+         }
+      },
+      "probing_config":{
+         "type":"object",
+         "properties":{
+            "train_size":{
+               "type":"number",
+               "minimum": 0,
+               "exclusiveMaximum": 1
+            },
+            "dev_size":{
+               "type":"number",
+               "minimum": 0,
+               "exclusiveMaximum": 1
+            },
+            "test_size":{
+               "type":"number",
+               "minimum": 0,
+               "exclusiveMaximum": 1
+            },
+            "intra_metric":{
+               "type":"string"
+            },
+            "inter_metric":{
+               "type":"string"
+            },
+            "probing_models":{
+               "type":"array",
+               "items":{
+                  "type":"object",
+                  "properties":{
+                     "probing_model_name":{
+                        "type":"string"
+                     },
+                     "batch_size":{
+                        "type":"integer"
+                     },
+                     "epochs":{
+                        "type":"integer"
+                     },
+                     "number_of_models":{
+                        "type":"integer"
+                     }
+                  },
+                  "required":[
+                     "probing_model_name",
+                     "batch_size",
+                     "epochs",
+                     "number_of_models"
+                  ]
+               }
+            }
+         },
+         "required":[
+            "intra_metric",
+            "probing_models"
+         ]
+      }
+   }
+}
